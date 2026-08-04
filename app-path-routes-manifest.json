@@ -1,0 +1,21 @@
+{
+  "/(app)/blood-banks/page": "/blood-banks",
+  "/(app)/check-up/page": "/check-up",
+  "/(app)/facility/[id]/page": "/facility/[id]",
+  "/(app)/locator/page": "/locator",
+  "/(app)/result/[id]/page": "/result/[id]",
+  "/(marketing)/about/page": "/about",
+  "/(marketing)/contact/page": "/contact",
+  "/(marketing)/faq/page": "/faq",
+  "/(marketing)/features/page": "/features",
+  "/(marketing)/get-involved/page": "/get-involved",
+  "/(marketing)/how-it-works/page": "/how-it-works",
+  "/(marketing)/impact/page": "/impact",
+  "/(marketing)/page": "/",
+  "/(marketing)/privacy/page": "/privacy",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/facilities/route": "/api/facilities",
+  "/api/triage/route": "/api/triage",
+  "/favicon.ico/route": "/favicon.ico"
+}

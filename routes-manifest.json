@@ -1,0 +1,164 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/facility/[id]",
+      "regex": "^/facility/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/facility/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/result/[id]",
+      "regex": "^/result/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/result/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/about",
+      "regex": "^/about(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/about(?:/)?$"
+    },
+    {
+      "page": "/api/facilities",
+      "regex": "^/api/facilities(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/facilities(?:/)?$"
+    },
+    {
+      "page": "/api/triage",
+      "regex": "^/api/triage(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/triage(?:/)?$"
+    },
+    {
+      "page": "/blood-banks",
+      "regex": "^/blood\\-banks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/blood\\-banks(?:/)?$"
+    },
+    {
+      "page": "/check-up",
+      "regex": "^/check\\-up(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/check\\-up(?:/)?$"
+    },
+    {
+      "page": "/contact",
+      "regex": "^/contact(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contact(?:/)?$"
+    },
+    {
+      "page": "/faq",
+      "regex": "^/faq(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/faq(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/features",
+      "regex": "^/features(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/features(?:/)?$"
+    },
+    {
+      "page": "/get-involved",
+      "regex": "^/get\\-involved(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/get\\-involved(?:/)?$"
+    },
+    {
+      "page": "/how-it-works",
+      "regex": "^/how\\-it\\-works(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/how\\-it\\-works(?:/)?$"
+    },
+    {
+      "page": "/impact",
+      "regex": "^/impact(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/impact(?:/)?$"
+    },
+    {
+      "page": "/locator",
+      "regex": "^/locator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/locator(?:/)?$"
+    },
+    {
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
