@@ -1,33 +1,54 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion as m } from 'framer-motion';
-import { Mic, Touchpad, Activity, ArrowRight, Trash2, ShieldAlert } from 'lucide-react';
+import { Mic, Touchpad, Activity, ArrowRight, Trash2, MapPin } from 'lucide-react';
 import { VoiceInput } from '../components/VoiceInput';
 import { BodyMapFallback } from '../components/BodyMapFallback';
 import { useLanguage } from '@/lib/language-context';
 
 export default function CheckUpPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'voice' | 'bodymap'>('voice');
   const [transcriptionText, setTranscriptionText] = useState('');
   const [selectedChips, setSelectedChips] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
 
-  const handleToggleChip = (sym: string) => {
-    if (selectedChips.includes(sym)) {
-      setSelectedChips(selectedChips.filter((s) => s !== sym));
-    } else {
-      setSelectedChips([...selectedChips, sym]);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserCoords({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          });
+        },
+        () => {
+          // Default fallback location (e.g. Chittoor / Tirupati region)
+          setUserCoords({ lat: 13.2172, lng: 79.1003 });
+        },
+        { enableHighAccuracy: true, timeout: 6000 }
+      );
     }
-  };
+  }, []);
 
-  const handleClearAll = () => {
+  const handleToggleChip = useCallback((sym: string) => {
+    setSelectedChips((prev) => 
+      prev.includes(sym) ? prev.filter((s) => s !== sym) : [...prev, sym]
+    );
+  }, []);
+
+  const handleClearAll = useCallback(() => {
     setTranscriptionText('');
     setSelectedChips([]);
-  };
+  }, []);
+
+  const handleTranscriptComplete = useCallback((text: string) => {
+    setTranscriptionText(text);
+  }, []);
 
   const handleAnalyze = async () => {
     if (!transcriptionText && selectedChips.length === 0) {
@@ -42,7 +63,10 @@ export default function CheckUpPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           symptoms: selectedChips,
-          transcription: transcriptionText
+          transcription: transcriptionText,
+          userLat: userCoords?.lat,
+          userLng: userCoords?.lng,
+          language
         })
       });
 
@@ -51,7 +75,7 @@ export default function CheckUpPage() {
         sessionStorage.setItem(`triage_${data.id}`, JSON.stringify(data));
       }
       router.push(`/result/${data.id}`);
-    } catch (err) {
+    } catch {
       alert("Error generating triage report. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -73,6 +97,13 @@ export default function CheckUpPage() {
         <p className="text-sm text-[#6B6355] max-w-xl mx-auto">
           Speak in your mother tongue or tap symptoms on the visual body selector. No login required.
         </p>
+
+        {userCoords && (
+          <div className="inline-flex items-center gap-1.5 bg-[#FAF6EE] text-[#0F6E56] border border-[#E5DCC8] px-3 py-0.5 rounded-full text-[11px] font-semibold">
+            <MapPin className="w-3 h-3 text-[#D85A30]" />
+            <span>Live GPS Active (100km Hospital Proximity Enabled)</span>
+          </div>
+        )}
       </div>
 
       {/* Mode Switcher Tabs */}
@@ -104,7 +135,7 @@ export default function CheckUpPage() {
 
       {/* Tab Content */}
       {activeTab === 'voice' ? (
-        <VoiceInput onTranscriptComplete={(text) => setTranscriptionText(text)} />
+        <VoiceInput onTranscriptComplete={handleTranscriptComplete} />
       ) : (
         <BodyMapFallback
           selectedSymptoms={selectedChips}
@@ -168,7 +199,7 @@ export default function CheckUpPage() {
           }`}
         >
           {isSubmitting ? (
-            <span>Evaluating Symptoms...</span>
+            <span>Evaluating Symptoms & Finding Nearest Hospitals...</span>
           ) : (
             <>
               <span>{t('analyzeSymptoms')}</span>

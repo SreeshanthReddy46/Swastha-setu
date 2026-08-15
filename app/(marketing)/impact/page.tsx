@@ -2,11 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Building2, MapPin, Activity, CheckCircle2, TrendingUp, Users, ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 
 export default function ImpactPage() {
-  const { t } = useLanguage();
 
   const districtCoverage = [
     { district: "Chittoor & Annamayya", state: "Andhra Pradesh", phcs: 342, chcs: 48, status: "Active Index" },

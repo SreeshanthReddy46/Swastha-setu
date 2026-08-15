@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion as m } from 'framer-motion';
-import { Stethoscope, Calculator, CheckCircle2, FileText, Printer, Sparkles, RefreshCcw } from 'lucide-react';
+import { Stethoscope, FileText, Printer } from 'lucide-react';
 
 export function AshaToolkit() {
   const [ageGroup, setAgeGroup] = useState<'child' | 'adult'>('child');
   const [weightKg, setWeightKg] = useState<number>(12);
   const [dehydration, setDehydration] = useState<'mild' | 'moderate' | 'severe'>('moderate');
   const [generatedSlip, setGeneratedSlip] = useState(false);
+  const [refId, setRefId] = useState('REF-ASH-01');
 
   // WHO ORS Guidelines: ~75 ml / kg for moderate dehydration over 4 hours
   const calculateOrsMl = () => {
@@ -19,8 +19,16 @@ export function AshaToolkit() {
   const orsMl = calculateOrsMl();
   const sachetsNeeded = Math.ceil(orsMl / 1000); // 1 WHO sachet makes 1 liter (1000ml)
 
+  const handleToggleSlip = () => {
+    if (!generatedSlip && refId === 'REF-ASH-01') {
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+      setRefId(`REF-ASH-${randomSuffix}`);
+    }
+    setGeneratedSlip(!generatedSlip);
+  };
+
   return (
-    <div className="glow-card p-6 sm:p-8 space-y-6 bg-white">
+    <div className="glow-card p-6 sm:p-8 space-y-6 bg-white" suppressHydrationWarning>
       
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[#E5DCC8] pb-4">
@@ -48,16 +56,18 @@ export function AshaToolkit() {
           <label className="text-xs font-bold text-[#2C2418] uppercase">Patient Category</label>
           <div className="flex bg-[#FAF6EE] p-1 rounded-xl border border-[#E5DCC8]">
             <button
+              type="button"
               onClick={() => { setAgeGroup('child'); setWeightKg(12); }}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 ageGroup === 'child' ? 'bg-[#0F6E56] text-white' : 'text-[#6B6355]'
               }`}
             >
               Child (under 12)
             </button>
             <button
+              type="button"
               onClick={() => { setAgeGroup('adult'); setWeightKg(55); }}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 ageGroup === 'adult' ? 'bg-[#0F6E56] text-white' : 'text-[#6B6355]'
               }`}
             >
@@ -87,8 +97,8 @@ export function AshaToolkit() {
           <label className="text-xs font-bold text-[#2C2418] uppercase">Dehydration Level</label>
           <select
             value={dehydration}
-            onChange={(e) => setDehydration(e.target.value as any)}
-            className="w-full bg-[#FAF6EE] border border-[#E5DCC8] rounded-xl px-3 py-2 text-xs font-bold text-[#2C2418]"
+            onChange={(e) => setDehydration(e.target.value as 'mild' | 'moderate' | 'severe')}
+            className="w-full bg-[#FAF6EE] border border-[#E5DCC8] rounded-xl px-3 py-2 text-xs font-bold text-[#2C2418] cursor-pointer"
           >
             <option value="mild">Mild (Increased Thirst)</option>
             <option value="moderate">Moderate (Dry Mouth, Lethargy)</option>
@@ -119,23 +129,20 @@ export function AshaToolkit() {
 
       {/* Digital PHC Referral Slip Generator Button */}
       <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <m.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => setGeneratedSlip(!generatedSlip)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#D85A30] hover:bg-[#C24C24] text-white text-xs font-extrabold px-6 py-3 rounded-xl shadow-xs cursor-pointer"
+        <button
+          type="button"
+          onClick={handleToggleSlip}
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#D85A30] hover:bg-[#C24C24] text-white text-xs font-extrabold px-6 py-3 rounded-xl shadow-xs transition-all active:scale-98 cursor-pointer"
         >
           <FileText className="w-4 h-4" />
           <span>{generatedSlip ? "Hide Referral Slip" : "Generate Digital PHC Referral Slip"}</span>
-        </m.button>
+        </button>
       </div>
 
       {/* Generated Digital Referral Slip Card */}
       {generatedSlip && (
-        <m.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white border-2 border-[#0F6E56] rounded-2xl p-6 space-y-4 shadow-md"
+        <div
+          className="bg-white border-2 border-[#0F6E56] rounded-2xl p-6 space-y-4 shadow-md transition-all animate-in fade-in slide-in-from-bottom-2 duration-300"
         >
           <div className="flex items-center justify-between border-b border-[#E5DCC8] pb-3">
             <div>
@@ -144,7 +151,7 @@ export function AshaToolkit() {
               </span>
               <h4 className="text-base font-extrabold text-[#2C2418] pt-1">PHC Clinical Referral Form</h4>
             </div>
-            <span className="text-[10px] font-mono font-bold text-[#6B6355]">Ref ID: {Date.now().toString(36).toUpperCase()}</span>
+            <span className="text-[10px] font-mono font-bold text-[#6B6355]">Ref ID: {refId}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-[#2C2418]">
@@ -159,12 +166,13 @@ export function AshaToolkit() {
           </p>
 
           <button
+            type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 bg-[#0F6E56] text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-[#0C443A] cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-[#0F6E56] text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-[#0C443A] transition-all active:scale-95 cursor-pointer"
           >
             <Printer className="w-3.5 h-3.5" /> Print / Save Slip
           </button>
-        </m.div>
+        </div>
       )}
 
     </div>

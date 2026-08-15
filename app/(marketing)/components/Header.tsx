@@ -27,27 +27,18 @@ export function Header() {
     { label: t('navContact'), id: 'contact' },
   ];
 
-  // High-performance requestAnimationFrame scroll spy listener
+  // High-performance passive scroll detection & IntersectionObserver for active section
   useEffect(() => {
+    let lastScrolled = false;
     let ticking = false;
 
-    const onScroll = () => {
+    const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          setIsScrolled(scrollY > 20);
-
-          if (pathname === '/') {
-            const sections = navItems.map((item) => document.getElementById(item.id));
-            const scrollPosition = scrollY + 130;
-
-            for (let i = sections.length - 1; i >= 0; i--) {
-              const section = sections[i];
-              if (section && section.offsetTop <= scrollPosition) {
-                setActiveSection(navItems[i].id);
-                break;
-              }
-            }
+          const currentScrolled = window.scrollY > 20;
+          if (currentScrolled !== lastScrolled) {
+            lastScrolled = currentScrolled;
+            setIsScrolled(currentScrolled);
           }
           ticking = false;
         });
@@ -55,8 +46,35 @@ export function Header() {
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    // IntersectionObserver for zero-reflow scroll spy
+    if (pathname === '/') {
+      const sectionIds = ['hero', 'about', 'how-it-works', 'features', 'impact', 'faq', 'get-involved', 'contact'];
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(entry.target.id);
+            }
+          });
+        },
+        { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
+      );
+
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        observer.disconnect();
+      };
+    }
+
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname]);
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
@@ -74,16 +92,12 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-2 sm:px-4 pt-2.5 pointer-events-none">
-      <m.div
-        animate={{
-          scale: isScrolled ? 0.98 : 1,
-        }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
-        className={`mx-auto transition-all duration-300 pointer-events-auto gpu-accelerated ${
+    <header className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-4 pt-2.5 pointer-events-none">
+      <div
+        className={`mx-auto transition-all duration-200 pointer-events-auto ${
           isScrolled
-            ? 'max-w-6xl bg-[#FAF6EE]/94 backdrop-blur-xl border border-[#E5DCC8] shadow-lg rounded-2xl py-2 px-3 sm:px-4'
-            : 'max-w-7xl bg-[#FAF6EE]/96 border-b border-[#E5DCC8]/70 py-3 px-4 sm:px-5 rounded-b-2xl'
+            ? 'max-w-6xl bg-[#FAF6EE]/96 backdrop-blur-md border border-[#E5DCC8] shadow-md rounded-2xl py-2 px-3 sm:px-4'
+            : 'max-w-7xl bg-[#FAF6EE]/95 border-b border-[#E5DCC8]/70 py-3 px-4 sm:px-5 rounded-b-2xl'
         }`}
       >
         <div className="flex items-center justify-between flex-nowrap gap-2 sm:gap-4 w-full">
@@ -230,7 +244,7 @@ export function Header() {
             </m.div>
           )}
         </AnimatePresence>
-      </m.div>
+      </div>
     </header>
   );
 }

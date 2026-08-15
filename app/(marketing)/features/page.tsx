@@ -2,11 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Mic, ShieldCheck, MapPin, Activity, WifiOff, Lock, Volume2, ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { Mic, MapPin, Activity, WifiOff, Lock, Volume2 } from 'lucide-react';
 
 export default function FeaturesPage() {
-  const { t } = useLanguage();
 
   const features = [
     {

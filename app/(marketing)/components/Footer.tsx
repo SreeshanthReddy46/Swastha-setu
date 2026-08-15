@@ -4,10 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Heart, ExternalLink } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
-import { useLanguage } from '@/lib/language-context';
-
 export function Footer() {
-  const { t } = useLanguage();
 
   return (
     <footer className="bg-[#0C443A] text-white pt-16 pb-12 border-t border-[#0F6E56]/40">

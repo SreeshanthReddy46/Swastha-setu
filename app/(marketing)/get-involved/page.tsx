@@ -1,14 +1,15 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { Users, Building2, Heart, Share2, Download, ArrowRight } from 'lucide-react';
-import { AshaToolkit } from '@/components/AshaToolkit';
-import { useLanguage } from '@/lib/language-context';
+import dynamic from 'next/dynamic';
+import { Users, Building2, Heart } from 'lucide-react';
+
+const AshaToolkit = dynamic(
+  () => import('@/components/AshaToolkit').then((mod) => mod.AshaToolkit),
+  { ssr: false, loading: () => <div className="glow-card p-8 bg-white min-h-[260px] flex items-center justify-center text-xs font-bold text-[#6B6355]">Loading ASHA Frontline Calculator...</div> }
+);
 
 export default function GetInvolvedPage() {
-  const { t } = useLanguage();
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       
@@ -70,7 +71,7 @@ export default function GetInvolvedPage() {
           </div>
           <h3 className="text-xl font-bold text-[#2C2418]">For District Health Depts</h3>
           <p className="text-sm text-[#6B6355] leading-relaxed">
-            Connect your district's official PHC/CHC inventory, doctor shift data, and emergency helpline numbers directly into the Swastha Setu open index.
+            Connect your district&apos;s official PHC/CHC inventory, doctor shift data, and emergency helpline numbers directly into the Swastha Setu open index.
           </p>
           <ul className="space-y-2 text-xs font-semibold text-[#BA7517] pt-2">
             <li>✓ Custom district data seeding</li>

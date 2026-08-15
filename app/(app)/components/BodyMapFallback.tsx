@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { User, Activity, AlertCircle, Check } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { Activity, Check } from 'lucide-react';
 
 interface BodyMapFallbackProps {
   selectedSymptoms: string[];
@@ -10,8 +9,6 @@ interface BodyMapFallbackProps {
 }
 
 export function BodyMapFallback({ selectedSymptoms, onToggleSymptom }: BodyMapFallbackProps) {
-  const { t } = useLanguage();
-
   const bodyRegions = [
     {
       region: "Head & Neck",

@@ -1,13 +1,9 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-import { Lock, ShieldCheck, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { CheckCircle2, XCircle } from 'lucide-react';
 
 export default function PrivacyPage() {
-  const { t } = useLanguage();
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       
@@ -62,11 +58,11 @@ export default function PrivacyPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-600 font-bold text-lg">•</span>
-              <span><strong>Coarse Location for PHC Search:</strong> If you allow location access, your latitude and longitude are used purely to calculate distance to nearby PHCs and are never saved to a user profile.</span>
+              <span><strong>Coarse Location for Hospital Search:</strong> If you allow location access, your latitude and longitude are used purely to calculate distance to nearby hospitals within 100km and are never saved to a user profile.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-600 font-bold text-lg">•</span>
-              <span><strong>Aggregated Anonymized Research Metrics:</strong> Non-identifiable stats (e.g. "45 checks performed in Chittoor district") may be compiled to improve public health facility indexing.</span>
+              <span><strong>Aggregated Anonymized Research Metrics:</strong> Non-identifiable stats (e.g. &quot;45 checks performed in Chittoor district&quot;) may be compiled to improve public health facility indexing.</span>
             </li>
           </ul>
         </div>

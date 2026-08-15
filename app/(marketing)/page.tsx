@@ -2,37 +2,32 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { motion as m } from 'framer-motion';
 import { useLanguage } from '@/lib/language-context';
-import { AshaToolkit } from '@/components/AshaToolkit';
+
+const AshaToolkit = dynamic(
+  () => import('@/components/AshaToolkit').then((mod) => mod.AshaToolkit),
+  { ssr: false, loading: () => <div className="glow-card p-8 bg-white min-h-[260px] flex items-center justify-center text-xs font-bold text-[#6B6355]">Loading ASHA Frontline Calculator...</div> }
+);
 import { 
   Mic, 
-  ShieldCheck, 
   MapPin, 
   Sparkles, 
   ArrowRight, 
   Volume2, 
   Activity, 
-  Clock, 
-  Languages, 
   Lock, 
   CheckCircle2, 
   Building2,
   ChevronRight,
-  HelpCircle,
   AlertTriangle,
   Users,
   Heart,
-  Download,
   Mail,
   Phone,
-  Send,
   ChevronDown,
-  XCircle,
   WifiOff,
-  Stethoscope,
-  Ambulance,
-  Pill,
   ChevronLeft
 } from 'lucide-react';
 
@@ -199,8 +194,8 @@ export default function HomePage() {
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#D85A30] text-white shadow-lg animate-mic-pulse mb-3">
                   <Mic className="w-10 h-10" />
                 </div>
-                <p className="text-sm font-bold text-[#2C2418]">"నాకు కడుపులో తీవ్రమైన నొప్పిగా ఉంది..."</p>
-                <p className="text-xs text-[#6B6355] mt-1">("I have severe stomach pain...")</p>
+                <p className="text-sm font-bold text-[#2C2418]">&quot;నాకు కడుపులో తీవ్రమైన నొప్పిగా ఉంది...&quot;</p>
+                <p className="text-xs text-[#6B6355] mt-1">(&quot;I have severe stomach pain...&quot;)</p>
               </div>
 
               <div className="bg-[#FAF6EE] border-l-4 border-[#BA7517] p-3.5 rounded-r-xl space-y-1">
@@ -401,18 +396,14 @@ export default function HomePage() {
           </div>
         </m.div>
 
-        {/* Smooth Horizontal Carousel Container */}
+        {/* Smooth Horizontal Carousel Container - Native GPU Acceleration */}
         <div 
           ref={horizontalScrollRef}
           className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 pt-2 no-scrollbar scroll-smooth"
         >
           {districtShowcase.map((item, idx) => (
-            <m.div
+            <div
               key={idx}
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
               className="snap-start shrink-0 w-[290px] sm:w-[340px] glow-card p-6 space-y-4 cursor-pointer"
             >
               <div className={`bg-gradient-to-br ${item.imageBg} rounded-2xl p-4 space-y-2 border border-[#E5DCC8]/40`}>
@@ -438,7 +429,7 @@ export default function HomePage() {
                 <span>Doctors On Duty:</span>
                 <span className="text-[#0F6E56] font-extrabold">{item.activeDoctors} Active</span>
               </div>
-            </m.div>
+            </div>
           ))}
         </div>
       </section>

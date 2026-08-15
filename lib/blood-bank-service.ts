@@ -32,8 +32,46 @@ export interface BloodBank {
   distance_km: number;
 }
 
+interface IndexedBloodBank extends BloodBank {
+  _searchIndex: string;
+}
+
+const allBloodBanks: BloodBank[] = bloodBankSeedData as BloodBank[];
+
+// Pre-index by ID and build search strings
+const bloodBankMap = new Map<string, BloodBank>();
+const indexedBloodBanks: IndexedBloodBank[] = allBloodBanks.map((bb) => {
+  bloodBankMap.set(bb.id, bb);
+  const searchIndex = [
+    bb.name,
+    bb.district,
+    bb.state,
+    bb.type,
+    bb.medical_officer_in_charge || '',
+  ].join(' ').toLowerCase();
+
+  return {
+    ...bb,
+    _searchIndex: searchIndex,
+  };
+});
+
+// Cache for search results under heavy traffic
+const bloodBankQueryCache = new Map<string, BloodBank[]>();
+const MAX_BB_CACHE_SIZE = 150;
+
+function getBBCacheKey(query: string, bloodGroupFilter: string, userLat?: number, userLng?: number): string {
+  const latKey = userLat !== undefined ? Math.round(userLat * 100) : 'none';
+  const lngKey = userLng !== undefined ? Math.round(userLng * 100) : 'none';
+  return `${query.trim().toLowerCase()}|${bloodGroupFilter}|${latKey}|${lngKey}`;
+}
+
 export function getAllBloodBanks(): BloodBank[] {
-  return bloodBankSeedData as BloodBank[];
+  return allBloodBanks;
+}
+
+export function getBloodBankById(id: string): BloodBank | undefined {
+  return bloodBankMap.get(id);
 }
 
 export function searchBloodBanks(
@@ -42,7 +80,25 @@ export function searchBloodBanks(
   userLat?: number,
   userLng?: number
 ): BloodBank[] {
-  let list = getAllBloodBanks();
+  const cacheKey = getBBCacheKey(query, bloodGroupFilter, userLat, userLng);
+  const cached = bloodBankQueryCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  let list: BloodBank[] = indexedBloodBanks;
+
+  // Filter by Blood Group Stock
+  if (bloodGroupFilter !== 'all') {
+    const key = bloodGroupFilter.toUpperCase() as keyof BloodAvailability;
+    list = list.filter((bb) => (bb.blood_availability[key] || 0) > 0);
+  }
+
+  // Filter by query string
+  const q = query.trim().toLowerCase();
+  if (q !== '') {
+    list = list.filter((bb) => (bb as IndexedBloodBank)._searchIndex.includes(q));
+  }
 
   // Recalculate dynamic GPS Haversine distance if coordinates supplied
   if (userLat !== undefined && userLng !== undefined) {
@@ -50,33 +106,19 @@ export function searchBloodBanks(
       const dist = calculateHaversineDistance(userLat, userLng, bb.latitude, bb.longitude);
       return {
         ...bb,
-        distance_km: dist
+        distance_km: dist,
       };
     });
 
     list.sort((a, b) => a.distance_km - b.distance_km);
   }
 
-  // Filter by Blood Group Stock
-  if (bloodGroupFilter !== 'all') {
-    list = list.filter((bb) => {
-      const key = bloodGroupFilter.toUpperCase() as keyof BloodAvailability;
-      return (bb.blood_availability[key] || 0) > 0;
-    });
+  // Cache result
+  if (bloodBankQueryCache.size >= MAX_BB_CACHE_SIZE) {
+    const firstKey = bloodBankQueryCache.keys().next().value;
+    if (firstKey) bloodBankQueryCache.delete(firstKey);
   }
-
-  // Filter by query string
-  if (query.trim() !== '') {
-    const q = query.toLowerCase();
-    list = list.filter(
-      (bb) =>
-        bb.name.toLowerCase().includes(q) ||
-        bb.district.toLowerCase().includes(q) ||
-        bb.state.toLowerCase().includes(q) ||
-        bb.type.toLowerCase().includes(q) ||
-        (bb.medical_officer_in_charge && bb.medical_officer_in_charge.toLowerCase().includes(q))
-    );
-  }
+  bloodBankQueryCache.set(cacheKey, list);
 
   return list;
 }

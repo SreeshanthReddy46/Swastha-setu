@@ -1,28 +1,22 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { 
-  Building2, 
   MapPin, 
   Phone, 
   Search, 
   Filter, 
-  CheckCircle2, 
   AlertCircle, 
   ArrowRight,
   Ambulance,
   Stethoscope,
-  Navigation,
   RefreshCw,
   LocateFixed,
-  ShieldAlert,
-  HeartPulse,
-  Activity
+  HeartPulse
 } from 'lucide-react';
 import { searchFacilities, HealthFacility } from '@/lib/facility-service';
-import { useLanguage } from '@/lib/language-context';
 
 // Dynamically import Leaflet map to avoid SSR window errors
 const FacilityMap = dynamic(() => import('../components/FacilityMap.client'), {
@@ -31,11 +25,9 @@ const FacilityMap = dynamic(() => import('../components/FacilityMap.client'), {
 });
 
 export default function LocatorPage() {
-  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [emergencyOnly, setEmergencyOnly] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [facilities, setFacilities] = useState<HealthFacility[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<HealthFacility | null>(null);
   
   // Location States
@@ -43,28 +35,26 @@ export default function LocatorPage() {
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
-  const fetchFacilities = (coords?: { lat: number; lng: number } | null) => {
-    const activeLat = coords ? coords.lat : (userCoords ? userCoords.lat : undefined);
-    const activeLng = coords ? coords.lng : (userCoords ? userCoords.lng : undefined);
-    let list = searchFacilities(query, emergencyOnly, activeLat, activeLng);
+  const facilities = useMemo(() => {
+    const activeLat = userCoords ? userCoords.lat : undefined;
+    const activeLng = userCoords ? userCoords.lng : undefined;
+    let list = searchFacilities(query, emergencyOnly, activeLat, activeLng, 100);
     
     if (selectedCategory !== 'all') {
       list = list.filter((f) => 
         f.type.toLowerCase().includes(selectedCategory.toLowerCase()) || 
-        (f as any).category?.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-        f.specialties?.some(s => s.toLowerCase().includes(selectedCategory.toLowerCase()))
+        (f.category && f.category.toLowerCase().includes(selectedCategory.toLowerCase())) ||
+        (f.specialties && f.specialties.some(s => s.toLowerCase().includes(selectedCategory.toLowerCase())))
       );
     }
-
-    setFacilities(list);
-    if (list.length > 0) {
-      setSelectedFacility(list[0]);
-    }
-  };
-
-  useEffect(() => {
-    fetchFacilities();
+    return list;
   }, [query, emergencyOnly, selectedCategory, userCoords]);
+
+  const activeSelected = selectedFacility || facilities[0] || null;
+
+  const handleSelectFacility = useCallback((f: HealthFacility) => {
+    setSelectedFacility(f);
+  }, []);
 
   // Request Browser Geolocation
   const handleDetectLocation = () => {
@@ -78,15 +68,13 @@ export default function LocatorPage() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coords = {
+        setUserCoords({
           lat: position.coords.latitude,
           lng: position.coords.longitude
-        };
-        setUserCoords(coords);
+        });
         setIsLocating(false);
-        fetchFacilities(coords);
       },
-      (err) => {
+      () => {
         setIsLocating(false);
         setLocationError("Location permission denied or unavailable. You can use preset regions below.");
       },
@@ -95,12 +83,10 @@ export default function LocatorPage() {
   };
 
   // Quick Preset Locations for instant 1-click evaluation
-  const setPresetCoords = (lat: number, lng: number, name: string) => {
-    const coords = { lat, lng };
-    setUserCoords(coords);
+  const setPresetCoords = (lat: number, lng: number) => {
+    setUserCoords({ lat, lng });
     setLocationError(null);
     setQuery('');
-    fetchFacilities(coords);
   };
 
   return (
@@ -110,7 +96,7 @@ export default function LocatorPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5DCC8] pb-4">
         <div>
           <span className="text-xs font-extrabold text-[#0F6E56] uppercase tracking-wider block mb-1">
-            Verified Open Healthcare Dataset Index
+            Verified Open Healthcare Dataset Index (100 km Radius)
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2C2418]">
             Nearby Hospitals & Medical Facilities
@@ -140,12 +126,12 @@ export default function LocatorPage() {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping shrink-0" />
             <span>
-              GPS Location Active ({userCoords.lat.toFixed(4)}° N, {userCoords.lng.toFixed(4)}° E) — Showing All Hospitals Sorted by Direct Proximity
+              GPS Location Active ({userCoords.lat.toFixed(4)}° N, {userCoords.lng.toFixed(4)}° E) — Showing All Hospitals Within 100km Radius (Closest to Furthest)
             </span>
           </div>
           <button
             onClick={() => setUserCoords(null)}
-            className="text-[11px] font-semibold text-[#A32D2D] hover:underline"
+            className="text-[11px] font-semibold text-[#A32D2D] hover:underline cursor-pointer"
           >
             Reset GPS
           </button>
@@ -163,34 +149,40 @@ export default function LocatorPage() {
       <div className="bg-[#FAF6EE] border border-[#E5DCC8] rounded-2xl p-3 flex flex-wrap items-center gap-2 text-xs">
         <span className="font-bold text-[#6B6355] mr-1">One-Tap Test Regions:</span>
         <button
-          onClick={() => setPresetCoords(13.2172, 79.1003, "Chittoor")}
-          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs"
+          onClick={() => setPresetCoords(13.2172, 79.1003)}
+          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs cursor-pointer"
         >
           📍 Chittoor / Tirupati (AP)
         </button>
         <button
-          onClick={() => setPresetCoords(18.1012, 78.8520, "Siddipet")}
-          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs"
+          onClick={() => setPresetCoords(18.1012, 78.8520)}
+          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs cursor-pointer"
         >
           📍 Siddipet / AIIMS Bibinagar (TS)
         </button>
         <button
-          onClick={() => setPresetCoords(26.2285, 81.2425, "Rae Bareli")}
-          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs"
+          onClick={() => setPresetCoords(26.2285, 81.2425)}
+          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs cursor-pointer"
         >
           📍 AIIMS Rae Bareli (UP)
         </button>
         <button
-          onClick={() => setPresetCoords(26.1209, 85.3647, "Muzaffarpur")}
-          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs"
+          onClick={() => setPresetCoords(26.1209, 85.3647)}
+          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs cursor-pointer"
         >
           📍 SKMCH Muzaffarpur (BR)
         </button>
         <button
-          onClick={() => setPresetCoords(28.5273, 77.2119, "Delhi")}
-          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs"
+          onClick={() => setPresetCoords(28.5672, 77.2100)}
+          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs cursor-pointer"
         >
-          📍 Safdarjung / Max (Delhi NCR)
+          📍 AIIMS / Safdarjung (Delhi)
+        </button>
+        <button
+          onClick={() => setPresetCoords(12.9629, 77.5750)}
+          className="bg-white border border-[#E5DCC8] hover:border-[#0F6E56] text-[#2C2418] font-semibold px-3 py-1.5 rounded-lg shadow-2xs cursor-pointer"
+        >
+          📍 Bengaluru (NIMHANS / Victoria)
         </button>
       </div>
 
@@ -250,18 +242,18 @@ export default function LocatorPage() {
         {/* Left Column: Hospital Cards List */}
         <div className="lg:col-span-6 space-y-4 max-h-[680px] overflow-y-auto pr-1">
           <div className="text-xs font-bold text-[#6B6355] px-1 flex items-center justify-between">
-            <span>Showing {facilities.length} Hospitals & Medical Centers</span>
-            <span>{userCoords ? "Sorted by GPS Proximity" : "Sorted by Proximity"}</span>
+            <span>Showing {facilities.length} Hospitals (Within 100 km Radius)</span>
+            <span>{userCoords ? "Closest to Furthest" : "Sorted by Proximity"}</span>
           </div>
 
           {facilities.length === 0 ? (
             <div className="bg-white border border-[#E5DCC8] rounded-2xl p-8 text-center space-y-2">
-              <p className="text-sm font-bold text-[#2C2418]">No hospitals match your search criteria.</p>
-              <p className="text-xs text-[#6B6355]">Try clearing search keywords or selecting "All Hospitals".</p>
+              <p className="text-sm font-bold text-[#2C2418]">No hospitals match your search criteria within this range.</p>
+              <p className="text-xs text-[#6B6355]">Try clearing search keywords or selecting &quot;All Hospitals&quot;.</p>
             </div>
           ) : (
             facilities.map((f) => {
-              const isSelected = selectedFacility?.id === f.id;
+              const isSelected = activeSelected?.id === f.id;
               return (
                 <div
                   key={f.id}
@@ -278,9 +270,9 @@ export default function LocatorPage() {
                         <span className="text-[10px] font-extrabold uppercase bg-[#0F6E56]/10 text-[#0F6E56] px-2 py-0.5 rounded">
                           {f.type}
                         </span>
-                        {(f as any).category && (
+                        {f.category && (
                           <span className="text-[10px] font-bold bg-[#FAF6EE] text-[#6B6355] border border-[#E5DCC8] px-2 py-0.5 rounded">
-                            {(f as any).category}
+                            {f.category}
                           </span>
                         )}
                         <span className="text-xs font-bold text-[#6B6355]">{f.district}, {f.state}</span>
@@ -289,7 +281,7 @@ export default function LocatorPage() {
                     </div>
 
                     <span className="text-xs font-extrabold text-[#D85A30] bg-[#D85A30]/10 px-2.5 py-1 rounded-lg shrink-0">
-                      📍 {f.distance_km} km away
+                      📍 {f.distance_km < 1 ? `${(f.distance_km * 1000).toFixed(0)}m` : `${f.distance_km} km`}
                     </span>
                   </div>
 
@@ -310,10 +302,10 @@ export default function LocatorPage() {
                     <span className={`px-2 py-0.5 rounded ${f.emergency_24x7 ? 'bg-emerald-100 text-emerald-800 font-bold' : 'bg-gray-100 text-gray-700'}`}>
                       {f.emergency_24x7 ? '✓ 24/7 Emergency Active' : 'Day OPD'}
                     </span>
-                    {(f as any).icu_beds && (
+                    {f.icu_beds !== undefined && f.icu_beds > 0 && (
                       <span className="bg-rose-100 text-rose-900 font-bold px-2 py-0.5 rounded flex items-center gap-1">
                         <HeartPulse className="w-3 h-3 text-rose-600" />
-                        {(f as any).icu_beds} ICU Beds
+                        {f.icu_beds} ICU Beds
                       </span>
                     )}
                     <span className="bg-[#FAF6EE] text-[#2C2418] border border-[#E5DCC8] px-2 py-0.5 rounded flex items-center gap-1">
@@ -357,11 +349,11 @@ export default function LocatorPage() {
             <div className="flex items-center justify-between px-2">
               <span className="text-xs font-bold text-[#2C2418] flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-[#0F6E56]" />
-                {userCoords ? "GPS Synced Hospital Map" : "3D OpenStreetMap Hospital Locator"}
+                {userCoords ? "GPS Synced 100km Hospital Map" : "3D OpenStreetMap Hospital Locator"}
               </span>
-              {selectedFacility && (
+              {activeSelected && (
                 <span className="text-[11px] font-bold text-[#0F6E56] truncate max-w-[200px]">
-                  Selected: {selectedFacility.name}
+                  Selected: {activeSelected.name}
                 </span>
               )}
             </div>
@@ -369,9 +361,9 @@ export default function LocatorPage() {
             <div className="h-[500px]">
               <FacilityMap
                 facilities={facilities}
-                selectedFacilityId={selectedFacility?.id}
+                selectedFacilityId={activeSelected?.id}
                 userCoords={userCoords}
-                onSelectFacility={(f) => setSelectedFacility(f)}
+                onSelectFacility={handleSelectFacility}
               />
             </div>
           </div>

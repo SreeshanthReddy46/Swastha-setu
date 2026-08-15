@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useSyncExternalStore } from 'react';
 import { motion as m, AnimatePresence } from 'framer-motion';
 import { Globe } from 'lucide-react';
 
@@ -297,26 +297,52 @@ const translations: Record<Language, Record<string, string>> = {
   }
 };
 
+function subscribeToStorage(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
+  window.addEventListener('storage', callback);
+  window.addEventListener('language-change', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('language-change', callback);
+  };
+}
+
+function getLanguageSnapshot(): Language {
+  if (typeof window === 'undefined') return 'en';
+  try {
+    const saved = localStorage.getItem('swastha_setu_lang') as Language;
+    if (saved && translations[saved]) return saved;
+  } catch {
+    // Ignore private mode error
+  }
+  return 'en';
+}
+
+function getServerLanguageSnapshot(): Language {
+  return 'en';
+}
+
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en');
+  const syncedLanguage = useSyncExternalStore(
+    subscribeToStorage,
+    getLanguageSnapshot,
+    getServerLanguageSnapshot
+  );
+  const [localLanguage, setLocalLanguage] = useState<Language | null>(null);
+  const language = localLanguage || syncedLanguage;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Restore saved language preference from localStorage on initial client mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('swastha_setu_lang') as Language;
-      if (savedLang && translations[savedLang]) {
-        setLanguageState(savedLang);
-      }
-    }
-  }, []);
-
   const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
+    setLocalLanguage(lang);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('swastha_setu_lang', lang);
+      try {
+        localStorage.setItem('swastha_setu_lang', lang);
+        window.dispatchEvent(new Event('language-change'));
+      } catch {
+        // Ignore
+      }
     }
     const langInfo = languageNames[lang];
     setToastMessage(`🌐 Switched Language to ${langInfo.native} (${langInfo.english})`);

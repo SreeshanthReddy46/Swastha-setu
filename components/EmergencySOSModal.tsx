@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion as m, AnimatePresence } from 'framer-motion';
-import { PhoneCall, AlertTriangle, X, MapPin, ShieldAlert, Volume2, VolumeX, Copy, Check } from 'lucide-react';
+import { PhoneCall, X, ShieldAlert, Volume2, VolumeX, Copy, Check } from 'lucide-react';
 
 export function EmergencySOSModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +20,12 @@ export function EmergencySOSModal() {
         { timeout: 5000 }
       );
     }
+
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
   }, []);
 
   const handleCopyCoords = () => {

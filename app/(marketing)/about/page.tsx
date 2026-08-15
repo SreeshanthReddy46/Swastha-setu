@@ -2,12 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ShieldAlert, Heart, Users, Sparkles, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { Heart, Users, Sparkles, AlertTriangle, ArrowRight } from 'lucide-react';
 
 export default function AboutPage() {
-  const { t } = useLanguage();
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       
@@ -20,7 +17,7 @@ export default function AboutPage() {
           Bridging the Last-Mile Healthcare Knowledge Gap
         </h1>
         <p className="text-lg text-[#6B6355] leading-relaxed">
-          Swastha Setu ("स्वास्थ्य सेतु") is designed to empower rural and semi-urban communities with plain-language, voice-first symptom triage and verified government health facility guidance.
+          Swastha Setu (&quot;स्वास्थ्य सेतु&quot;) is designed to empower rural and semi-urban communities with plain-language, voice-first symptom triage and verified government health facility guidance.
         </p>
       </div>
 
@@ -29,7 +26,7 @@ export default function AboutPage() {
         <h2 className="text-2xl font-bold text-[#2C2418]">The Context: Ayushman Bharat & The Rural Care Gap</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-[#6B6355] text-base leading-relaxed">
           <p>
-            Under India's Ayushman Bharat program and National Health Mission, thousands of Primary Health Centres (PHCs) and Community Health Centres (CHCs) have been upgraded to Health and Wellness Centres. Government doctors, essential medicines, and emergency ambulances exist on the ground.
+            Under India&apos;s Ayushman Bharat program and National Health Mission, thousands of Primary Health Centres (PHCs) and Community Health Centres (CHCs) have been upgraded to Health and Wellness Centres. Government doctors, essential medicines, and emergency ambulances exist on the ground.
           </p>
           <p>
             However, a massive information asymmetry persists. Rural citizens—especially elders and low-literacy individuals—lack an easy way to understand whether their fever, stomach pain, or dizziness requires an emergency hospital visit or routine home care, and whether their nearby PHC has doctors on duty.
@@ -54,9 +51,9 @@ export default function AboutPage() {
           <div className="w-10 h-10 rounded-xl bg-[#0F6E56]/10 text-[#0F6E56] flex items-center justify-center font-bold">
             <Users className="w-5 h-5" />
           </div>
-          <h3 className="text-lg font-bold text-[#2C2418]">Telugu, Hindi & English</h3>
+          <h3 className="text-lg font-bold text-[#2C2418]">9 Regional Languages Supported</h3>
           <p className="text-sm text-[#6B6355] leading-relaxed">
-            Initial localization focuses on Telugu and Hindi dialects alongside English, catering to over 600 million native regional language speakers across North and South India.
+            Localization across Hindi, Telugu, Tamil, Kannada, Bengali, Marathi, Gujarati, Odia, and English catering to over 1 billion native speakers.
           </p>
         </div>
 

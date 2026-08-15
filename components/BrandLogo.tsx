@@ -26,8 +26,9 @@ export function BrandLogo({ size = 'md', showSubtitle = true, lightMode = false 
     <div className="flex items-center gap-3 group select-none cursor-pointer">
       {/* Unique Friendly Logo Emblem */}
       <m.div
-        whileHover={{ scale: 1.08, rotate: 6 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.06, rotate: 4 }}
+        whileTap={{ scale: 0.96 }}
+        transition={{ type: 'spring', stiffness: 350, damping: 20 }}
         className={`${iconSizes[size]} rounded-2xl bg-gradient-to-br from-[#0F6E56] via-[#0C443A] to-[#0A3830] flex items-center justify-center text-white shadow-md relative overflow-hidden border border-white/20`}
       >
         {/* Subtle background glow */}

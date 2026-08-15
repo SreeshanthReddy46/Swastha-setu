@@ -1,28 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { 
-  Droplet, 
   MapPin, 
   Phone, 
   Search, 
   Filter, 
-  CheckCircle2, 
   AlertCircle, 
-  ArrowRight,
-  Navigation,
-  RefreshCw,
-  LocateFixed,
-  ShieldAlert,
-  HeartPulse,
-  Activity,
-  Users,
-  UserCheck
+  Navigation, 
+  RefreshCw, 
+  LocateFixed, 
+  Users, 
+  UserCheck 
 } from 'lucide-react';
 import { searchBloodBanks, BloodBank } from '@/lib/blood-bank-service';
-import { useLanguage } from '@/lib/language-context';
+import { HealthFacility } from '@/lib/facility-service';
 
 // Dynamically import Leaflet map
 const FacilityMap = dynamic(() => import('../components/FacilityMap.client'), {
@@ -30,11 +23,29 @@ const FacilityMap = dynamic(() => import('../components/FacilityMap.client'), {
   loading: () => <div className="w-full h-96 bg-[#FAF6EE] border border-[#E5DCC8] rounded-2xl flex items-center justify-center text-xs font-bold text-[#6B6355]">Loading Interactive Blood Bank Map...</div>
 });
 
+const BLOOD_GROUPS = [
+  { id: 'all', label: '🩸 All Blood Groups' },
+  { id: 'O_NEG', label: '🅾️ O- Universal Donor' },
+  { id: 'O_POS', label: '🅾️ O+ Positive' },
+  { id: 'A_POS', label: '🅰️ A+ Positive' },
+  { id: 'A_NEG', label: '🅰️ A- Negative' },
+  { id: 'B_POS', label: '🅱️ B+ Positive' },
+  { id: 'B_NEG', label: '🅱️ B- Negative' },
+  { id: 'AB_POS', label: '🆎 AB+ Positive' },
+  { id: 'AB_NEG', label: '🆎 AB- Negative' },
+  { id: 'PLATELETS', label: '🧪 Platelets (SDP/RDP)' },
+  { id: 'FFP', label: '🔬 FFP (Fresh Frozen Plasma)' },
+];
+
+function getStockBadgeColor(units: number) {
+  if (units >= 15) return 'bg-emerald-100 text-emerald-900 border-emerald-300';
+  if (units > 0) return 'bg-amber-100 text-amber-900 border-amber-300';
+  return 'bg-rose-100 text-rose-900 border-rose-300 opacity-60';
+}
+
 export default function BloodBankPage() {
-  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [selectedBloodGroup, setSelectedBloodGroup] = useState<string>('all');
-  const [bloodBanks, setBloodBanks] = useState<BloodBank[]>([]);
   const [selectedBloodBank, setSelectedBloodBank] = useState<BloodBank | null>(null);
 
   // Location States
@@ -42,19 +53,18 @@ export default function BloodBankPage() {
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
-  const fetchBloodBanks = (coords?: { lat: number; lng: number } | null) => {
-    const activeLat = coords ? coords.lat : (userCoords ? userCoords.lat : undefined);
-    const activeLng = coords ? coords.lng : (userCoords ? userCoords.lng : undefined);
-    const list = searchBloodBanks(query, selectedBloodGroup, activeLat, activeLng);
-    setBloodBanks(list);
-    if (list.length > 0) {
-      setSelectedBloodBank(list[0]);
-    }
-  };
-
-  useEffect(() => {
-    fetchBloodBanks();
+  const bloodBanks = useMemo(() => {
+    const activeLat = userCoords ? userCoords.lat : undefined;
+    const activeLng = userCoords ? userCoords.lng : undefined;
+    return searchBloodBanks(query, selectedBloodGroup, activeLat, activeLng);
   }, [query, selectedBloodGroup, userCoords]);
+
+  const activeSelected = selectedBloodBank || bloodBanks[0] || null;
+
+  const handleSelectFacility = useCallback((f: HealthFacility) => {
+    const found = bloodBanks.find((bb) => bb.id === f.id);
+    if (found) setSelectedBloodBank(found);
+  }, [bloodBanks]);
 
   // Request Browser Geolocation
   const handleDetectLocation = () => {
@@ -68,15 +78,13 @@ export default function BloodBankPage() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coords = {
+        setUserCoords({
           lat: position.coords.latitude,
           lng: position.coords.longitude
-        };
-        setUserCoords(coords);
+        });
         setIsLocating(false);
-        fetchBloodBanks(coords);
       },
-      (err) => {
+      () => {
         setIsLocating(false);
         setLocationError("Location permission denied or unavailable. Showing nearby district blood banks.");
       },
@@ -85,7 +93,7 @@ export default function BloodBankPage() {
   };
 
   // Convert BloodBank[] to HealthFacility[] shape for Leaflet map compatibility
-  const mapFacilities = bloodBanks.map((bb) => ({
+  const mapFacilities: HealthFacility[] = useMemo(() => bloodBanks.map((bb) => ({
     id: bb.id,
     name: bb.name,
     type: bb.type,
@@ -97,17 +105,9 @@ export default function BloodBankPage() {
     phone: bb.phone,
     emergency_24x7: bb.emergency_24x7,
     doctors_on_duty: bb.staff_count,
-    beds_available: 50,
     ambulance_available: true,
-    operating_hours: bb.operating_hours,
-    distance_km: bb.distance_km
-  }));
-
-  const getStockBadgeColor = (count: number) => {
-    if (count >= 15) return 'bg-emerald-100 text-emerald-800 border-emerald-300';
-    if (count > 0) return 'bg-amber-100 text-amber-900 border-amber-300';
-    return 'bg-rose-100 text-rose-800 border-rose-300';
-  };
+    distance_km: bb.distance_km,
+  })), [bloodBanks]);
 
   return (
     <div className="space-y-6 py-2">
@@ -116,14 +116,13 @@ export default function BloodBankPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5DCC8] pb-4">
         <div>
           <span className="text-xs font-extrabold text-[#A32D2D] uppercase tracking-wider block mb-1">
-            Indian Red Cross & Model Blood Bank Directory
+            Emergency 24x7 Public Blood & Component Availability
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2C2418] flex items-center gap-2">
-            <Droplet className="w-8 h-8 text-[#A32D2D] fill-[#A32D2D]" />
-            Emergency Blood Bank Finder
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2C2418]">
+            Government Blood Bank & Stock Locator
           </h1>
           <p className="text-xs text-[#6B6355]">
-            Check live blood group availability, component stock (Platelets & Plasma), staff count, and get direct 24/7 issue contact numbers.
+            District Civil Hospitals, Red Cross Centers, Super Speciality Blood Units, and Mobile Donors
           </p>
         </div>
 
@@ -137,7 +136,7 @@ export default function BloodBankPage() {
           ) : (
             <LocateFixed className="w-4 h-4 text-rose-200" />
           )}
-          <span>{isLocating ? "Acquiring GPS Signal..." : "📍 Detect My Location for Blood Banks"}</span>
+          <span>{isLocating ? "Acquiring GPS Signal..." : "📍 Detect My Location for Blood"}</span>
         </button>
       </div>
 
@@ -145,14 +144,14 @@ export default function BloodBankPage() {
       {userCoords && (
         <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-bold text-rose-900">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping shrink-0" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#A32D2D] animate-ping shrink-0" />
             <span>
-              GPS Location Active ({userCoords.lat.toFixed(4)}° N, {userCoords.lng.toFixed(4)}° E) — Showing Blood Banks Sorted by Direct Proximity
+              GPS Active ({userCoords.lat.toFixed(4)}° N, {userCoords.lng.toFixed(4)}° E) — Showing Blood Banks Within 100km Sorted by Proximity
             </span>
           </div>
           <button
             onClick={() => setUserCoords(null)}
-            className="text-[11px] font-semibold text-[#A32D2D] hover:underline"
+            className="text-[11px] font-semibold text-[#A32D2D] hover:underline cursor-pointer"
           >
             Reset GPS
           </button>
@@ -166,23 +165,13 @@ export default function BloodBankPage() {
         </div>
       )}
 
-      {/* Blood Group Filter Pills */}
-      <div className="space-y-1.5">
-        <span className="text-xs font-bold text-[#6B6355] uppercase tracking-wider">Filter by Required Blood Group / Component:</span>
+      {/* Blood Group Filter Pill Bar */}
+      <div className="space-y-2">
+        <span className="text-xs font-extrabold text-[#2C2418] uppercase tracking-wider flex items-center gap-1.5">
+          <Filter className="w-3.5 h-3.5 text-[#A32D2D]" /> Filter by Required Blood Group or Component:
+        </span>
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar text-xs font-bold">
-          {[
-            { id: 'all', label: '🩸 All Blood Groups' },
-            { id: 'O_POS', label: 'O+ Positive' },
-            { id: 'O_NEG', label: 'O- Universal' },
-            { id: 'A_POS', label: 'A+ Positive' },
-            { id: 'A_NEG', label: 'A- Negative' },
-            { id: 'B_POS', label: 'B+ Positive' },
-            { id: 'B_NEG', label: 'B- Negative' },
-            { id: 'AB_POS', label: 'AB+ Positive' },
-            { id: 'AB_NEG', label: 'AB- Negative' },
-            { id: 'PLATELETS', label: '⚡ Platelets (SDP/RDP)' },
-            { id: 'FFP', label: '💧 FFP (Plasma)' },
-          ].map((bg) => (
+          {BLOOD_GROUPS.map((bg) => (
             <button
               key={bg.id}
               onClick={() => setSelectedBloodGroup(bg.id)}
@@ -219,17 +208,17 @@ export default function BloodBankPage() {
         <div className="lg:col-span-6 space-y-4 max-h-[680px] overflow-y-auto pr-1">
           <div className="text-xs font-bold text-[#6B6355] px-1 flex items-center justify-between">
             <span>Showing {bloodBanks.length} Active Blood Banks</span>
-            <span>{userCoords ? "Sorted by GPS Proximity" : "Sorted by Proximity"}</span>
+            <span>{userCoords ? "Closest to Furthest" : "Sorted by Proximity"}</span>
           </div>
 
           {bloodBanks.length === 0 ? (
             <div className="bg-white border border-[#E5DCC8] rounded-2xl p-8 text-center space-y-2">
               <p className="text-sm font-bold text-[#2C2418]">No blood banks match your selected criteria.</p>
-              <p className="text-xs text-[#6B6355]">Try selecting "All Blood Groups" or clearing search keywords.</p>
+              <p className="text-xs text-[#6B6355]">Try selecting &quot;All Blood Groups&quot; or clearing search keywords.</p>
             </div>
           ) : (
             bloodBanks.map((bb) => {
-              const isSelected = selectedBloodBank?.id === bb.id;
+              const isSelected = activeSelected?.id === bb.id;
               const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(bb.name + ' ' + bb.address)}`;
 
               return (
@@ -254,7 +243,7 @@ export default function BloodBankPage() {
                     </div>
 
                     <span className="text-xs font-extrabold text-[#A32D2D] bg-rose-100 px-2.5 py-1 rounded-lg shrink-0">
-                      📍 {bb.distance_km} km away
+                      📍 {bb.distance_km < 1 ? `${(bb.distance_km * 1000).toFixed(0)}m` : `${bb.distance_km} km`}
                     </span>
                   </div>
 
@@ -334,9 +323,9 @@ export default function BloodBankPage() {
                 <MapPin className="w-4 h-4 text-[#A32D2D]" />
                 {userCoords ? "GPS Synced Blood Bank Map" : "3D OpenStreetMap Blood Bank Locator"}
               </span>
-              {selectedBloodBank && (
+              {activeSelected && (
                 <span className="text-[11px] font-bold text-[#A32D2D] truncate max-w-[200px]">
-                  Selected: {selectedBloodBank.name}
+                  Selected: {activeSelected.name}
                 </span>
               )}
             </div>
@@ -344,12 +333,9 @@ export default function BloodBankPage() {
             <div className="h-[500px]">
               <FacilityMap
                 facilities={mapFacilities}
-                selectedFacilityId={selectedBloodBank?.id}
+                selectedFacilityId={activeSelected?.id}
                 userCoords={userCoords}
-                onSelectFacility={(f) => {
-                  const found = bloodBanks.find((bb) => bb.id === f.id);
-                  if (found) setSelectedBloodBank(found);
-                }}
+                onSelectFacility={handleSelectFacility}
               />
             </div>
           </div>

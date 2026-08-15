@@ -2,12 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Mic, AlertTriangle, ShieldCheck, MapPin, Phone, Volume2, ArrowRight, HelpCircle } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { Mic, MapPin, Phone, Volume2, ArrowRight, HelpCircle } from 'lucide-react';
 
 export default function HowItWorksPage() {
-  const { t } = useLanguage();
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       
@@ -36,7 +33,7 @@ export default function HowItWorksPage() {
           </p>
           <div className="bg-[#FAF6EE] border-l-4 border-[#0F6E56] p-4 rounded-r-xl space-y-1">
             <h4 className="text-xs font-bold text-[#0F6E56] flex items-center gap-1.5">
-              <HelpCircle className="w-4 h-4" /> What if I can't speak clearly or it's too noisy?
+              <HelpCircle className="w-4 h-4" /> What if I can&apos;t speak clearly or it&apos;s too noisy?
             </h4>
             <p className="text-xs text-[#2C2418] leading-relaxed">
               Simply switch to the <strong>Visual Body Map</strong> tab. Tap the affected body region (Head, Chest, Abdomen, Joints) and select common symptom chips with one tap.
@@ -49,7 +46,7 @@ export default function HowItWorksPage() {
           <div className="w-16 h-16 rounded-full bg-[#D85A30] text-white flex items-center justify-center mx-auto shadow-md animate-mic-pulse">
             <Mic className="w-8 h-8" />
           </div>
-          <p className="text-xs font-bold text-[#2C2418]">"నాకు జ్వరం మరియు తలనొప్పి ఉంది..."</p>
+          <p className="text-xs font-bold text-[#2C2418]">&quot;నాకు జ్వరం మరియు తలనొప్పి ఉంది...&quot;</p>
           <div className="flex justify-center gap-2 text-[10px] text-[#6B6355]">
             <span className="bg-white border border-[#E5DCC8] px-2 py-1 rounded">Fever</span>
             <span className="bg-white border border-[#E5DCC8] px-2 py-1 rounded">Headache</span>
@@ -105,9 +102,9 @@ export default function HowItWorksPage() {
           <div className="inline-flex items-center gap-2 bg-[#BA7517]/10 text-[#BA7517] font-bold text-xs px-3 py-1 rounded-md">
             STEP 3 & 4
           </div>
-          <h2 className="text-2xl font-bold text-[#2C2418]">PHC Locator & Live Directions</h2>
+          <h2 className="text-2xl font-bold text-[#2C2418]">Hospital & PHC Locator & Live Directions</h2>
           <p className="text-[#6B6355] text-sm leading-relaxed">
-            Based on your location or district search, Swastha Setu displays verified nearby public health facilities, active medical officers, ambulance availability, and stock of essential medicines (e.g., ORS, antivenom, antibiotics).
+            Based on your location within a 100km radius, Swastha Setu displays verified nearby public and multi-specialty hospitals, active medical officers, ICU bed counts, and emergency ambulance readiness.
           </p>
           <p className="text-[#6B6355] text-sm leading-relaxed">
             One tap launches Google Maps directions or places a direct phone call to the facility.
@@ -116,17 +113,17 @@ export default function HowItWorksPage() {
 
         <div className="lg:col-span-5 bg-[#FAF6EE] border border-[#E5DCC8] rounded-2xl p-6 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#2C2418]">Chittoor Model PHC</span>
+            <span className="text-xs font-bold text-[#2C2418]">Chittoor District Hospital</span>
             <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">24/7 Active</span>
           </div>
-          <p className="text-xs text-[#6B6355]">1.2 km away · 3 Doctors on Duty · Ambulance Ready</p>
+          <p className="text-xs text-[#6B6355]">0.8 km away · 12 Doctors on Duty · 25 ICU Beds</p>
           <div className="flex gap-2 pt-2">
-            <button className="flex-1 bg-[#0F6E56] text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1">
+            <Link href="/locator" className="flex-1 bg-[#0F6E56] text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer">
               <MapPin className="w-3.5 h-3.5" /> Directions
-            </button>
-            <button className="flex-1 bg-white border border-[#E5DCC8] text-[#2C2418] text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1">
-              <Phone className="w-3.5 h-3.5" /> Call PHC
-            </button>
+            </Link>
+            <a href="tel:+918572232100" className="flex-1 bg-white border border-[#E5DCC8] text-[#2C2418] text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer">
+              <Phone className="w-3.5 h-3.5" /> Call Hospital
+            </a>
           </div>
         </div>
       </div>

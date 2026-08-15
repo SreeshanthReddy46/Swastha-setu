@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { HelpCircle, ChevronDown, ShieldCheck, Phone, Users, ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { HelpCircle, ChevronDown, ShieldCheck, Users } from 'lucide-react';
 
 export default function FAQPage() {
-  const { t } = useLanguage();
   const [openIndex, setOpenIndex] = useState<string | null>("trust-0");
 
   const trustFaqs = [
