@@ -108,10 +108,13 @@ export default function FacilityMap({ facilities, selectedFacilityId, userCoords
     // Render Hospital Markers with 3D Distance Badges
     facilities.forEach((f) => {
       const isSelected = f.id === selectedFacilityId;
+      const isGov = f.ownership === 'government';
+      const iconEmoji = isGov ? '🏛️' : '🏥';
+      const typeLabel = isGov ? 'Govt' : 'Private';
 
       const badgeHtml = `
-        <div class="leaflet-3d-marker-badge ${isSelected ? 'selected' : ''}">
-          🏥 ${f.type}: ${f.distance_km} km
+        <div class="leaflet-3d-marker-badge ${isSelected ? 'selected' : ''} ${isGov ? 'badge-govt' : 'badge-private'}">
+          ${iconEmoji} ${typeLabel}: ${f.distance_km} km
         </div>
       `;
 
@@ -125,13 +128,19 @@ export default function FacilityMap({ facilities, selectedFacilityId, userCoords
       const marker = L.marker([f.latitude, f.longitude], { icon: facilityDivIcon }).addTo(markersGroup);
 
       marker.bindPopup(`
-        <div style="font-family: system-ui; max-width: 220px; padding: 4px;">
-          <h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: bold; color: #2C2418;">${f.name}</h4>
-          <p style="margin: 0 0 4px 0; font-size: 11px; color: #6B6355;">${f.type} · ${f.district}</p>
+        <div style="font-family: system-ui; max-width: 230px; padding: 4px;">
+          <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: ${isGov ? '#E6F4EA' : '#EEF2FF'}; color: ${isGov ? '#137333' : '#3730A3'};">
+              ${isGov ? '🏛️ Government' : '🏥 Private (OSM)'}
+            </span>
+            <span style="font-size: 10px; font-weight: 600; color: #6B6355;">${f.district}</span>
+          </div>
+          <h4 style="margin: 0 0 4px 0; font-size: 13px; font-weight: bold; color: #2C2418; line-height: 1.2;">${f.name}</h4>
           <div style="background: #FAF6EE; padding: 6px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #E5DCC8;">
             <p style="margin: 0; font-size: 12px; color: #D85A30; font-weight: 800;">📍 Distance: ${f.distance_km} km</p>
             <p style="margin: 2px 0 0 0; font-size: 11px; color: #0F6E56; font-weight: bold;">${f.emergency_24x7 ? '✓ 24/7 Emergency Active' : 'Day OPD Service'}</p>
           </div>
+          <p style="margin: 0 0 4px 0; font-size: 10px; color: #6B6355; line-height: 1.3;">${f.address}</p>
           <a href="/facility/${f.id}" style="display: inline-block; font-size: 11px; font-weight: bold; color: #D85A30; text-decoration: none;">Full Profile & Directions →</a>
         </div>
       `);

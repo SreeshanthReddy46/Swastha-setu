@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { 
@@ -14,7 +14,10 @@ import {
   Stethoscope,
   RefreshCw,
   LocateFixed,
-  HeartPulse
+  HeartPulse,
+  Building2,
+  Landmark,
+  Layers
 } from 'lucide-react';
 import { searchFacilities, HealthFacility } from '@/lib/facility-service';
 
@@ -27,6 +30,7 @@ const FacilityMap = dynamic(() => import('../components/FacilityMap.client'), {
 export default function LocatorPage() {
   const [query, setQuery] = useState('');
   const [emergencyOnly, setEmergencyOnly] = useState(false);
+  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'government' | 'private'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedFacility, setSelectedFacility] = useState<HealthFacility | null>(null);
   
@@ -35,11 +39,84 @@ export default function LocatorPage() {
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
+  // Live API States
+  const [liveFacilities, setLiveFacilities] = useState<HealthFacility[] | null>(null);
+  const [isFetchingLive, setIsFetchingLive] = useState(false);
+
+  // Fetch merged results (Govt PHC + Live OSM) when user coordinates are active
+  useEffect(() => {
+    if (!userCoords) {
+      setLiveFacilities(null);
+      return;
+    }
+
+    let isMounted = true;
+    setIsFetchingLive(true);
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+
+    const fetchMerged = async () => {
+      try {
+        const params = new URLSearchParams({
+          lat: userCoords.lat.toString(),
+          lng: userCoords.lng.toString(),
+          emergency: emergencyOnly.toString(),
+          ...(query ? { q: query } : {}),
+          ...(ownershipFilter !== 'all' ? { ownership: ownershipFilter } : {}),
+        });
+
+        const res = await fetch(`/api/facilities?${params.toString()}`, {
+          signal: controller.signal,
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && Array.isArray(data.facilities)) {
+            setLiveFacilities(data.facilities);
+          }
+        }
+      } catch (err) {
+        console.warn('Live facility fetch timed out or failed, fallback to local index', err);
+      } finally {
+        clearTimeout(timeout);
+        if (isMounted) setIsFetchingLive(false);
+      }
+    };
+
+    fetchMerged();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+      clearTimeout(timeout);
+    };
+  }, [userCoords, emergencyOnly, query, ownershipFilter]);
+
+  // Fallback to local synchronous search if live API is not yet loaded or when browsing offline
   const facilities = useMemo(() => {
+    if (liveFacilities && userCoords) {
+      let list = liveFacilities;
+      if (selectedCategory !== 'all') {
+        list = list.filter((f) => 
+          f.type.toLowerCase().includes(selectedCategory.toLowerCase()) || 
+          (f.category && f.category.toLowerCase().includes(selectedCategory.toLowerCase())) ||
+          (f.specialties && f.specialties.some(s => s.toLowerCase().includes(selectedCategory.toLowerCase())))
+        );
+      }
+      return list;
+    }
+
     const activeLat = userCoords ? userCoords.lat : undefined;
     const activeLng = userCoords ? userCoords.lng : undefined;
     let list = searchFacilities(query, emergencyOnly, activeLat, activeLng, 100);
     
+    if (ownershipFilter === 'government') {
+      list = list.filter((f) => f.ownership === 'government' || !f.ownership);
+    } else if (ownershipFilter === 'private') {
+      list = list.filter((f) => f.ownership === 'private');
+    }
+
     if (selectedCategory !== 'all') {
       list = list.filter((f) => 
         f.type.toLowerCase().includes(selectedCategory.toLowerCase()) || 
@@ -48,7 +125,7 @@ export default function LocatorPage() {
       );
     }
     return list;
-  }, [query, emergencyOnly, selectedCategory, userCoords]);
+  }, [liveFacilities, query, emergencyOnly, ownershipFilter, selectedCategory, userCoords]);
 
   const activeSelected = selectedFacility || facilities[0] || null;
 
@@ -95,14 +172,21 @@ export default function LocatorPage() {
       {/* Header Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5DCC8] pb-4">
         <div>
-          <span className="text-xs font-extrabold text-[#0F6E56] uppercase tracking-wider block mb-1">
-            Verified Open Healthcare Dataset Index (100 km Radius)
-          </span>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-extrabold text-[#0F6E56] uppercase tracking-wider block">
+              Verified Open Healthcare & Live OSM Index (100 km Radius)
+            </span>
+            {isFetchingLive && (
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full animate-pulse">
+                Syncing Live OSM...
+              </span>
+            )}
+          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2C2418]">
             Nearby Hospitals & Medical Facilities
           </h1>
           <p className="text-xs text-[#6B6355]">
-            District Civil Hospitals, Super Speciality Centers, Medical Colleges, Maternity Hospitals & PHCs
+            Government District Hospitals, AIIMS, PHCs/CHCs &amp; Live Private Hospitals via OpenStreetMap
           </p>
         </div>
 
@@ -126,11 +210,14 @@ export default function LocatorPage() {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping shrink-0" />
             <span>
-              GPS Location Active ({userCoords.lat.toFixed(4)}° N, {userCoords.lng.toFixed(4)}° E) — Showing All Hospitals Within 100km Radius (Closest to Furthest)
+              GPS Location Active ({userCoords.lat.toFixed(4)}° N, {userCoords.lng.toFixed(4)}° E) — Showing All Government &amp; Private Hospitals Within Radius (Closest First)
             </span>
           </div>
           <button
-            onClick={() => setUserCoords(null)}
+            onClick={() => {
+              setUserCoords(null);
+              setLiveFacilities(null);
+            }}
             className="text-[11px] font-semibold text-[#A32D2D] hover:underline cursor-pointer"
           >
             Reset GPS
@@ -186,10 +273,50 @@ export default function LocatorPage() {
         </button>
       </div>
 
+      {/* Ownership Segmented Filter: All vs Govt vs Private */}
+      <div className="bg-white border border-[#E5DCC8] rounded-2xl p-2 flex flex-wrap items-center gap-2 shadow-xs text-xs font-bold">
+        <span className="text-[#6B6355] text-xs px-2 flex items-center gap-1.5">
+          <Layers className="w-3.5 h-3.5 text-[#0F6E56]" />
+          Facility Source:
+        </span>
+        <button
+          onClick={() => setOwnershipFilter('all')}
+          className={`px-3.5 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+            ownershipFilter === 'all'
+              ? 'bg-[#0F6E56] text-white border-[#0F6E56] shadow-xs'
+              : 'bg-[#FAF6EE] text-[#2C2418] border-[#E5DCC8] hover:border-[#0F6E56]'
+          }`}
+        >
+          <span>🏥 All Facilities</span>
+        </button>
+        <button
+          onClick={() => setOwnershipFilter('government')}
+          className={`px-3.5 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+            ownershipFilter === 'government'
+              ? 'bg-emerald-800 text-white border-emerald-800 shadow-xs'
+              : 'bg-white text-emerald-900 border-emerald-200 hover:border-emerald-500'
+          }`}
+        >
+          <Landmark className="w-3.5 h-3.5" />
+          <span>🏛️ Government PHC / CHC / Civil</span>
+        </button>
+        <button
+          onClick={() => setOwnershipFilter('private')}
+          className={`px-3.5 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+            ownershipFilter === 'private'
+              ? 'bg-indigo-700 text-white border-indigo-700 shadow-xs'
+              : 'bg-white text-indigo-900 border-indigo-200 hover:border-indigo-500'
+          }`}
+        >
+          <Building2 className="w-3.5 h-3.5" />
+          <span>🏥 Private Hospitals &amp; Clinics (OSM)</span>
+        </button>
+      </div>
+
       {/* Category Selection Filter Pills */}
       <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar text-xs font-bold">
         {[
-          { id: 'all', label: '🏥 All Hospitals' },
+          { id: 'all', label: '🏥 All Types' },
           { id: 'district', label: '🏛️ District Civil Hospitals' },
           { id: 'super', label: '⚡ Super Speciality & Medical Colleges' },
           { id: 'maternity', label: '👶 Maternity & Child Hospitals' },
@@ -232,7 +359,7 @@ export default function LocatorPage() {
           }`}
         >
           <Filter className="w-3.5 h-3.5" />
-          <span>24/7 Emergency & ICU Only</span>
+          <span>24/7 Emergency &amp; ICU Only</span>
         </button>
       </div>
 
@@ -242,18 +369,20 @@ export default function LocatorPage() {
         {/* Left Column: Hospital Cards List */}
         <div className="lg:col-span-6 space-y-4 max-h-[680px] overflow-y-auto pr-1">
           <div className="text-xs font-bold text-[#6B6355] px-1 flex items-center justify-between">
-            <span>Showing {facilities.length} Hospitals (Within 100 km Radius)</span>
+            <span>Showing {facilities.length} Facilities (Government &amp; Private)</span>
             <span>{userCoords ? "Closest to Furthest" : "Sorted by Proximity"}</span>
           </div>
 
           {facilities.length === 0 ? (
             <div className="bg-white border border-[#E5DCC8] rounded-2xl p-8 text-center space-y-2">
               <p className="text-sm font-bold text-[#2C2418]">No hospitals match your search criteria within this range.</p>
-              <p className="text-xs text-[#6B6355]">Try clearing search keywords or selecting &quot;All Hospitals&quot;.</p>
+              <p className="text-xs text-[#6B6355]">Try clearing search keywords or selecting &quot;All Facilities&quot;.</p>
             </div>
           ) : (
             facilities.map((f) => {
               const isSelected = activeSelected?.id === f.id;
+              const isGov = f.ownership === 'government';
+
               return (
                 <div
                   key={f.id}
@@ -267,9 +396,19 @@ export default function LocatorPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                        <span className="text-[10px] font-extrabold uppercase bg-[#0F6E56]/10 text-[#0F6E56] px-2 py-0.5 rounded">
+                        {/* Ownership Badge */}
+                        <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded flex items-center gap-1 ${
+                          isGov 
+                            ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' 
+                            : 'bg-indigo-50 text-indigo-900 border border-indigo-200'
+                        }`}>
+                          {isGov ? '🏛️ Government' : '🏥 Private (OSM)'}
+                        </span>
+
+                        <span className="text-[10px] font-bold bg-[#FAF6EE] text-[#6B6355] border border-[#E5DCC8] px-2 py-0.5 rounded">
                           {f.type}
                         </span>
+                        
                         {f.category && (
                           <span className="text-[10px] font-bold bg-[#FAF6EE] text-[#6B6355] border border-[#E5DCC8] px-2 py-0.5 rounded">
                             {f.category}
@@ -333,7 +472,7 @@ export default function LocatorPage() {
                       href={`/facility/${f.id}`}
                       className="text-xs font-bold text-[#D85A30] hover:underline flex items-center gap-1"
                     >
-                      <span>Full Hospital Profile & Directions</span>
+                      <span>Full Hospital Profile &amp; Directions</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>

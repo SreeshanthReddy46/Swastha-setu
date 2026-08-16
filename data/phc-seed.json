@@ -15,8 +15,24 @@
     "doctors_on_duty": 12,
     "beds_available": 150,
     "ambulance_available": true,
-    "specialties": ["Trauma Care", "Cardiology", "Pediatrics", "General Surgery", "Orthopedics", "Maternity"],
-    "medicines_in_stock": ["Paracetamol", "Amoxicillin", "ORS", "Snake Antivenom", "Insulin", "Iron Tablets", "IV Fluids", "Morphine"],
+    "specialties": [
+      "Trauma Care",
+      "Cardiology",
+      "Pediatrics",
+      "General Surgery",
+      "Orthopedics",
+      "Maternity"
+    ],
+    "medicines_in_stock": [
+      "Paracetamol",
+      "Amoxicillin",
+      "ORS",
+      "Snake Antivenom",
+      "Insulin",
+      "Iron Tablets",
+      "IV Fluids",
+      "Morphine"
+    ],
     "operating_hours": "24 Hours Emergency & Casualty Service",
     "distance_km": 0.8
   },
@@ -36,8 +52,22 @@
     "doctors_on_duty": 45,
     "beds_available": 600,
     "ambulance_available": true,
-    "specialties": ["Advanced Cardiology", "Neurosurgery", "Oncology", "Dialysis", "Organ Transplant", "Emergency Trauma"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Thrombolytics", "Chemotherapy Drugs", "Dialysis Kits", "Advanced Antibiotics", "Streptokinase"],
+    "specialties": [
+      "Advanced Cardiology",
+      "Neurosurgery",
+      "Oncology",
+      "Dialysis",
+      "Organ Transplant",
+      "Emergency Trauma"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Chemotherapy Drugs",
+      "Dialysis Kits",
+      "Advanced Antibiotics",
+      "Streptokinase"
+    ],
     "operating_hours": "24 Hours Trauma & Emergency Care",
     "distance_km": 3.4
   },
@@ -57,8 +87,22 @@
     "doctors_on_duty": 30,
     "beds_available": 450,
     "ambulance_available": true,
-    "specialties": ["Casualty & Emergency", "General Medicine", "Pediatrics", "Orthopedics", "Pulmonology", "Ophthalmology"],
-    "medicines_in_stock": ["Paracetamol", "ORS", "Anti-Rabies Vaccine", "Antibiotics", "IV Fluids", "Oxygen Cylinders"],
+    "specialties": [
+      "Casualty & Emergency",
+      "General Medicine",
+      "Pediatrics",
+      "Orthopedics",
+      "Pulmonology",
+      "Ophthalmology"
+    ],
+    "medicines_in_stock": [
+      "Paracetamol",
+      "ORS",
+      "Anti-Rabies Vaccine",
+      "Antibiotics",
+      "IV Fluids",
+      "Oxygen Cylinders"
+    ],
     "operating_hours": "24 Hours Emergency & Outpatient Service",
     "distance_km": 4.1
   },
@@ -78,10 +122,21 @@
     "doctors_on_duty": 8,
     "beds_available": 80,
     "ambulance_available": true,
-    "specialties": ["General Medicine", "Obstetrics & Gynecology", "Pediatrics", "Casualty"],
-    "medicines_in_stock": ["Paracetamol", "Amoxicillin", "ORS", "Tetanus Toxoid", "Iron Tablets"],
+    "specialties": [
+      "General Medicine",
+      "Obstetrics & Gynecology",
+      "Pediatrics",
+      "Casualty"
+    ],
+    "medicines_in_stock": [
+      "Paracetamol",
+      "Amoxicillin",
+      "ORS",
+      "Tetanus Toxoid",
+      "Iron Tablets"
+    ],
     "operating_hours": "24 Hours Emergency Service",
-    "distance_km": 68.0
+    "distance_km": 68
   },
   {
     "id": "hosp-005",
@@ -99,10 +154,22 @@
     "doctors_on_duty": 38,
     "beds_available": 500,
     "ambulance_available": true,
-    "specialties": ["Cardiovascular Surgery", "Emergency Medicine", "Gastroenterology", "Neurology", "Pediatric Critical Care"],
-    "medicines_in_stock": ["Advanced Antivirals", "Thrombolytics", "Inotropes", "Anti-Snake Venom", "Insulin"],
+    "specialties": [
+      "Cardiovascular Surgery",
+      "Emergency Medicine",
+      "Gastroenterology",
+      "Neurology",
+      "Pediatric Critical Care"
+    ],
+    "medicines_in_stock": [
+      "Advanced Antivirals",
+      "Thrombolytics",
+      "Inotropes",
+      "Anti-Snake Venom",
+      "Insulin"
+    ],
     "operating_hours": "24 Hours Apex Emergency & Trauma Center",
-    "distance_km": 32.0
+    "distance_km": 32
   },
   {
     "id": "hosp-006",
@@ -120,10 +187,23 @@
     "doctors_on_duty": 60,
     "beds_available": 900,
     "ambulance_available": true,
-    "specialties": ["Trauma Level-1", "Cardiology", "Neurosurgery", "General Surgery", "Burns Unit", "Toxicology"],
-    "medicines_in_stock": ["Full Trauma Drug Formulary", "Anti-Snake Venom", "Blood Products", "IV Fluids", "Morphine"],
+    "specialties": [
+      "Trauma Level-1",
+      "Cardiology",
+      "Neurosurgery",
+      "General Surgery",
+      "Burns Unit",
+      "Toxicology"
+    ],
+    "medicines_in_stock": [
+      "Full Trauma Drug Formulary",
+      "Anti-Snake Venom",
+      "Blood Products",
+      "IV Fluids",
+      "Morphine"
+    ],
     "operating_hours": "24 Hours Level-1 Trauma Care",
-    "distance_km": 12.0
+    "distance_km": 12
   },
   {
     "id": "hosp-007",
@@ -141,8 +221,20 @@
     "doctors_on_duty": 55,
     "beds_available": 850,
     "ambulance_available": true,
-    "specialties": ["Infectious Diseases", "Pulmonology", "Pediatrics", "Emergency Medicine", "Obstetrics"],
-    "medicines_in_stock": ["Antivirals", "Antibiotics", "Anti-Snake Venom", "Oxygen Therapy", "ICU Meds"],
+    "specialties": [
+      "Infectious Diseases",
+      "Pulmonology",
+      "Pediatrics",
+      "Emergency Medicine",
+      "Obstetrics"
+    ],
+    "medicines_in_stock": [
+      "Antivirals",
+      "Antibiotics",
+      "Anti-Snake Venom",
+      "Oxygen Therapy",
+      "ICU Meds"
+    ],
     "operating_hours": "24 Hours Emergency & Inpatient Care",
     "distance_km": 8.5
   },
@@ -162,10 +254,21 @@
     "doctors_on_duty": 10,
     "beds_available": 120,
     "ambulance_available": true,
-    "specialties": ["Emergency Casualty", "General Medicine", "Gynecology", "Pediatrics"],
-    "medicines_in_stock": ["Paracetamol", "Amoxicillin", "ORS", "Anti-Snake Venom", "Zinc Tablets"],
+    "specialties": [
+      "Emergency Casualty",
+      "General Medicine",
+      "Gynecology",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Paracetamol",
+      "Amoxicillin",
+      "ORS",
+      "Anti-Snake Venom",
+      "Zinc Tablets"
+    ],
     "operating_hours": "24 Hours Emergency Service",
-    "distance_km": 85.0
+    "distance_km": 85
   },
   {
     "id": "hosp-009",
@@ -176,17 +279,28 @@
     "state": "Telangana",
     "address": "Ensanpally, Siddipet, Telangana 502103",
     "latitude": 18.1018,
-    "longitude": 78.8520,
+    "longitude": 78.852,
     "phone": "+91 8457 230100",
     "emergency_24x7": true,
     "icu_beds": 30,
     "doctors_on_duty": 22,
     "beds_available": 300,
     "ambulance_available": true,
-    "specialties": ["Emergency & Trauma", "General Surgery", "Orthopedics", "Pediatrics", "Dialysis"],
-    "medicines_in_stock": ["Emergency Inotropes", "Anti-Snake Venom", "Antibiotics", "Dialysis Fluids"],
+    "specialties": [
+      "Emergency & Trauma",
+      "General Surgery",
+      "Orthopedics",
+      "Pediatrics",
+      "Dialysis"
+    ],
+    "medicines_in_stock": [
+      "Emergency Inotropes",
+      "Anti-Snake Venom",
+      "Antibiotics",
+      "Dialysis Fluids"
+    ],
     "operating_hours": "24 Hours Emergency & Trauma",
-    "distance_km": 72.0
+    "distance_km": 72
   },
   {
     "id": "hosp-010",
@@ -197,15 +311,27 @@
     "state": "Delhi",
     "address": "Sri Aurobindo Marg, Ansari Nagar, New Delhi 110029",
     "latitude": 28.5672,
-    "longitude": 77.2100,
+    "longitude": 77.21,
     "phone": "+91 11 2658 8500",
     "emergency_24x7": true,
     "icu_beds": 150,
     "doctors_on_duty": 120,
     "beds_available": 1800,
     "ambulance_available": true,
-    "specialties": ["Level-1 Trauma", "Cardiology", "Neurosurgery", "Oncology", "Pediatric Surgery", "Organ Transplant"],
-    "medicines_in_stock": ["Complete Apex Medical Formulary", "Thrombolytics", "Advanced Monoclonal Antibodies", "Antivenom"],
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurosurgery",
+      "Oncology",
+      "Pediatric Surgery",
+      "Organ Transplant"
+    ],
+    "medicines_in_stock": [
+      "Complete Apex Medical Formulary",
+      "Thrombolytics",
+      "Advanced Monoclonal Antibodies",
+      "Antivenom"
+    ],
     "operating_hours": "24 Hours JPN Apex Trauma Center & Emergency",
     "distance_km": 5.2
   },
@@ -225,8 +351,18 @@
     "doctors_on_duty": 90,
     "beds_available": 1600,
     "ambulance_available": true,
-    "specialties": ["Emergency Medicine", "Burns & Plastic Surgery", "Cardiothoracic Surgery", "Orthopedic Trauma"],
-    "medicines_in_stock": ["Trauma Emergency Kits", "Anti-Snake Venom", "Blood Products", "IV Fluids"],
+    "specialties": [
+      "Emergency Medicine",
+      "Burns & Plastic Surgery",
+      "Cardiothoracic Surgery",
+      "Orthopedic Trauma"
+    ],
+    "medicines_in_stock": [
+      "Trauma Emergency Kits",
+      "Anti-Snake Venom",
+      "Blood Products",
+      "IV Fluids"
+    ],
     "operating_hours": "24 Hours Super Speciality Emergency",
     "distance_km": 5.4
   },
@@ -246,8 +382,20 @@
     "doctors_on_duty": 80,
     "beds_available": 1400,
     "ambulance_available": true,
-    "specialties": ["Level-1 Trauma", "Cardiology", "Neurology", "Pediatrics", "Plastic Surgery", "Toxicology"],
-    "medicines_in_stock": ["Emergency Resuscitation Drugs", "Anti-Snake Venom", "Thrombolytics", "Antibiotics"],
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurology",
+      "Pediatrics",
+      "Plastic Surgery",
+      "Toxicology"
+    ],
+    "medicines_in_stock": [
+      "Emergency Resuscitation Drugs",
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Antibiotics"
+    ],
     "operating_hours": "24 Hours Trauma Center & Emergency Casualty",
     "distance_km": 4.5
   },
@@ -259,7 +407,7 @@
     "district": "Lucknow",
     "state": "Uttar Pradesh",
     "address": "Raebareli Road, Lucknow, UP 226014",
-    "latitude": 26.7450,
+    "latitude": 26.745,
     "longitude": 80.9392,
     "phone": "+91 522 266 8700",
     "emergency_24x7": true,
@@ -267,10 +415,21 @@
     "doctors_on_duty": 65,
     "beds_available": 900,
     "ambulance_available": true,
-    "specialties": ["Cardiovascular Sciences", "Gastroenterology", "Nephrology", "Endocrinology", "Critical Care"],
-    "medicines_in_stock": ["Advanced Chemotherapy", "Dialysis Consumables", "Critical Care Inotropes", "Antivirals"],
+    "specialties": [
+      "Cardiovascular Sciences",
+      "Gastroenterology",
+      "Nephrology",
+      "Endocrinology",
+      "Critical Care"
+    ],
+    "medicines_in_stock": [
+      "Advanced Chemotherapy",
+      "Dialysis Consumables",
+      "Critical Care Inotropes",
+      "Antivirals"
+    ],
     "operating_hours": "24 Hours Apex Emergency Care",
-    "distance_km": 14.0
+    "distance_km": 14
   },
   {
     "id": "hosp-014",
@@ -281,17 +440,28 @@
     "state": "Uttar Pradesh",
     "address": "Munshiganj, Dalmau Road, Rae Bareli, UP 229405",
     "latitude": 26.2415,
-    "longitude": 81.2510,
+    "longitude": 81.251,
     "phone": "+91 535 270 4400",
     "emergency_24x7": true,
     "icu_beds": 40,
     "doctors_on_duty": 25,
     "beds_available": 350,
     "ambulance_available": true,
-    "specialties": ["Emergency Medicine", "General Surgery", "Cardiology", "Pediatrics", "Gynecology"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Cardiac Inotropes", "IV Fluids", "Broad-Spectrum Antibiotics"],
+    "specialties": [
+      "Emergency Medicine",
+      "General Surgery",
+      "Cardiology",
+      "Pediatrics",
+      "Gynecology"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Cardiac Inotropes",
+      "IV Fluids",
+      "Broad-Spectrum Antibiotics"
+    ],
     "operating_hours": "24 Hours Apex Emergency & Casualty",
-    "distance_km": 8.0
+    "distance_km": 8
   },
   {
     "id": "hosp-015",
@@ -309,8 +479,19 @@
     "doctors_on_duty": 10,
     "beds_available": 160,
     "ambulance_available": true,
-    "specialties": ["Maternity & Child Health", "General Medicine", "Emergency Casualty", "Pediatrics"],
-    "medicines_in_stock": ["Oxytocin", "Iron Folic Acid", "Paracetamol", "ORS", "Anti-Snake Venom"],
+    "specialties": [
+      "Maternity & Child Health",
+      "General Medicine",
+      "Emergency Casualty",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Oxytocin",
+      "Iron Folic Acid",
+      "Paracetamol",
+      "ORS",
+      "Anti-Snake Venom"
+    ],
     "operating_hours": "24 Hours Emergency & Delivery Wing",
     "distance_km": 1.2
   },
@@ -322,7 +503,7 @@
     "district": "Varanasi",
     "state": "Uttar Pradesh",
     "address": "Banaras Hindu University Campus, Varanasi, UP 221005",
-    "latitude": 25.2750,
+    "latitude": 25.275,
     "longitude": 82.9995,
     "phone": "+91 542 236 7568",
     "emergency_24x7": true,
@@ -330,10 +511,21 @@
     "doctors_on_duty": 50,
     "beds_available": 800,
     "ambulance_available": true,
-    "specialties": ["Trauma Care", "Cardiology", "Neurosurgery", "Ayurvedic & Modern Integrative Care", "Pediatrics"],
-    "medicines_in_stock": ["Emergency Resuscitation Drugs", "Anti-Snake Venom", "Anti-Rabies Serum", "IV Fluids"],
+    "specialties": [
+      "Trauma Care",
+      "Cardiology",
+      "Neurosurgery",
+      "Ayurvedic & Modern Integrative Care",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Emergency Resuscitation Drugs",
+      "Anti-Snake Venom",
+      "Anti-Rabies Serum",
+      "IV Fluids"
+    ],
     "operating_hours": "24 Hours Emergency Trauma Service",
-    "distance_km": 6.0
+    "distance_km": 6
   },
   {
     "id": "hosp-017",
@@ -344,15 +536,26 @@
     "state": "Karnataka",
     "address": "Fort Road, Near City Market, Bengaluru, Karnataka 560002",
     "latitude": 12.9629,
-    "longitude": 77.5750,
+    "longitude": 77.575,
     "phone": "+91 80 2670 1150",
     "emergency_24x7": true,
     "icu_beds": 80,
     "doctors_on_duty": 60,
     "beds_available": 850,
     "ambulance_available": true,
-    "specialties": ["Emergency & Trauma", "Burns Center", "Orthopedics", "Cardiology", "Toxicology"],
-    "medicines_in_stock": ["Trauma Formulary", "Anti-Snake Venom", "Burns Dressing Solutions", "Antibiotics"],
+    "specialties": [
+      "Emergency & Trauma",
+      "Burns Center",
+      "Orthopedics",
+      "Cardiology",
+      "Toxicology"
+    ],
+    "medicines_in_stock": [
+      "Trauma Formulary",
+      "Anti-Snake Venom",
+      "Burns Dressing Solutions",
+      "Antibiotics"
+    ],
     "operating_hours": "24 Hours Emergency Trauma Center",
     "distance_km": 3.8
   },
@@ -372,8 +575,19 @@
     "doctors_on_duty": 40,
     "beds_available": 650,
     "ambulance_available": true,
-    "specialties": ["Emergency Neurosurgery", "Neurology", "Psychiatry", "Neuro-trauma", "Pediatric Neurology"],
-    "medicines_in_stock": ["Anti-Epileptics", "Mannitol", "Neuro-Critical Care Inotropes", "Psychotropic Medication"],
+    "specialties": [
+      "Emergency Neurosurgery",
+      "Neurology",
+      "Psychiatry",
+      "Neuro-trauma",
+      "Pediatric Neurology"
+    ],
+    "medicines_in_stock": [
+      "Anti-Epileptics",
+      "Mannitol",
+      "Neuro-Critical Care Inotropes",
+      "Psychotropic Medication"
+    ],
     "operating_hours": "24 Hours Neuro-Casualty & Psychiatric Emergency",
     "distance_km": 5.5
   },
@@ -393,8 +607,19 @@
     "doctors_on_duty": 75,
     "beds_available": 1300,
     "ambulance_available": true,
-    "specialties": ["Level-1 Trauma", "Cardiothoracic Surgery", "Nephrology", "Toxicology", "Vascular Surgery"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Thrombolytics", "Dialysis Fluids", "Cardiac Emergency Meds"],
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiothoracic Surgery",
+      "Nephrology",
+      "Toxicology",
+      "Vascular Surgery"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Dialysis Fluids",
+      "Cardiac Emergency Meds"
+    ],
     "operating_hours": "24 Hours Trauma & Casualty Wing",
     "distance_km": 2.5
   },
@@ -414,10 +639,21 @@
     "doctors_on_duty": 45,
     "beds_available": 750,
     "ambulance_available": true,
-    "specialties": ["Trauma Care", "Cardiology", "Pediatrics", "Obstetrics & Gynecology", "Neurosurgery"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Emergency Antibiotics", "Oxytocin", "IV Fluids"],
+    "specialties": [
+      "Trauma Care",
+      "Cardiology",
+      "Pediatrics",
+      "Obstetrics & Gynecology",
+      "Neurosurgery"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Emergency Antibiotics",
+      "Oxytocin",
+      "IV Fluids"
+    ],
     "operating_hours": "24 Hours Comprehensive Emergency Care",
-    "distance_km": 4.0
+    "distance_km": 4
   },
   {
     "id": "hosp-021",
@@ -435,8 +671,19 @@
     "doctors_on_duty": 70,
     "beds_available": 1200,
     "ambulance_available": true,
-    "specialties": ["Trauma Level-1", "Cardiology", "Neurosurgery", "Pediatric Surgery", "Toxicology & Poison Control"],
-    "medicines_in_stock": ["Emergency Resuscitation Formulary", "Anti-Snake Venom", "Cardiac Inotropes", "Blood Components"],
+    "specialties": [
+      "Trauma Level-1",
+      "Cardiology",
+      "Neurosurgery",
+      "Pediatric Surgery",
+      "Toxicology & Poison Control"
+    ],
+    "medicines_in_stock": [
+      "Emergency Resuscitation Formulary",
+      "Anti-Snake Venom",
+      "Cardiac Inotropes",
+      "Blood Components"
+    ],
     "operating_hours": "24 Hours Casualty & Emergency Medical Services",
     "distance_km": 4.2
   },
@@ -456,8 +703,19 @@
     "doctors_on_duty": 40,
     "beds_available": 600,
     "ambulance_available": true,
-    "specialties": ["Surgical Oncology", "Medical Oncology", "Radiation Oncology", "Palliative Care", "Onco-Emergency"],
-    "medicines_in_stock": ["Specialized Chemotherapeutics", "Opioid Analgesics", "Colony Stimulating Factors", "Blood Products"],
+    "specialties": [
+      "Surgical Oncology",
+      "Medical Oncology",
+      "Radiation Oncology",
+      "Palliative Care",
+      "Onco-Emergency"
+    ],
+    "medicines_in_stock": [
+      "Specialized Chemotherapeutics",
+      "Opioid Analgesics",
+      "Colony Stimulating Factors",
+      "Blood Products"
+    ],
     "operating_hours": "24 Hours Onco-Emergency & Inpatient Care",
     "distance_km": 4.5
   },
@@ -477,10 +735,21 @@
     "doctors_on_duty": 50,
     "beds_available": 850,
     "ambulance_available": true,
-    "specialties": ["Trauma & Casualty", "Cardiology", "Burns Care", "Orthopedics", "Pediatrics"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Antibiotics", "Anti-Rabies Vaccines", "Emergency IV Fluids"],
+    "specialties": [
+      "Trauma & Casualty",
+      "Cardiology",
+      "Burns Care",
+      "Orthopedics",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Antibiotics",
+      "Anti-Rabies Vaccines",
+      "Emergency IV Fluids"
+    ],
     "operating_hours": "24 Hours Emergency Casualty Service",
-    "distance_km": 3.0
+    "distance_km": 3
   },
   {
     "id": "hosp-024",
@@ -498,8 +767,20 @@
     "doctors_on_duty": 65,
     "beds_available": 1050,
     "ambulance_available": true,
-    "specialties": ["Emergency Medicine", "General Surgery", "Cardiology", "Tropical Diseases", "Pediatrics"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Antimalarials", "Dengue Supportive Therapy", "IV Fluids", "Antibiotics"],
+    "specialties": [
+      "Emergency Medicine",
+      "General Surgery",
+      "Cardiology",
+      "Tropical Diseases",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Antimalarials",
+      "Dengue Supportive Therapy",
+      "IV Fluids",
+      "Antibiotics"
+    ],
     "operating_hours": "24 Hours Emergency & Disaster Care",
     "distance_km": 3.2
   },
@@ -519,8 +800,19 @@
     "doctors_on_duty": 60,
     "beds_available": 950,
     "ambulance_available": true,
-    "specialties": ["Cardiothoracic Surgery", "Neurosurgery", "Level-1 Trauma", "Nephrology", "Organ Transplant"],
-    "medicines_in_stock": ["Thrombolytics", "Inotropes", "Dialysis Kits", "Advanced Antibiotics"],
+    "specialties": [
+      "Cardiothoracic Surgery",
+      "Neurosurgery",
+      "Level-1 Trauma",
+      "Nephrology",
+      "Organ Transplant"
+    ],
+    "medicines_in_stock": [
+      "Thrombolytics",
+      "Inotropes",
+      "Dialysis Kits",
+      "Advanced Antibiotics"
+    ],
     "operating_hours": "24 Hours Apex Trauma & Critical Care",
     "distance_km": 4.8
   },
@@ -540,8 +832,19 @@
     "doctors_on_duty": 45,
     "beds_available": 750,
     "ambulance_available": true,
-    "specialties": ["Emergency & Trauma", "Cardiology", "Pulmonology", "Gastroenterology", "Pediatrics"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Thrombolytics", "Advanced Antivirals", "Inotropes"],
+    "specialties": [
+      "Emergency & Trauma",
+      "Cardiology",
+      "Pulmonology",
+      "Gastroenterology",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Advanced Antivirals",
+      "Inotropes"
+    ],
     "operating_hours": "24 Hours Apex Emergency & Trauma Center",
     "distance_km": 9.5
   },
@@ -561,10 +864,21 @@
     "doctors_on_duty": 20,
     "beds_available": 400,
     "ambulance_available": true,
-    "specialties": ["Acute Encephalitis Syndrome (AES) Unit", "Pediatrics", "Emergency Medicine", "General Surgery"],
-    "medicines_in_stock": ["Mannitol", "Dextrose Solutions", "Paracetamol", "Anti-Snake Venom", "IV Fluids"],
+    "specialties": [
+      "Acute Encephalitis Syndrome (AES) Unit",
+      "Pediatrics",
+      "Emergency Medicine",
+      "General Surgery"
+    ],
+    "medicines_in_stock": [
+      "Mannitol",
+      "Dextrose Solutions",
+      "Paracetamol",
+      "Anti-Snake Venom",
+      "IV Fluids"
+    ],
     "operating_hours": "24 Hours Emergency & Pediatric PICU",
-    "distance_km": 5.0
+    "distance_km": 5
   },
   {
     "id": "hosp-028",
@@ -575,15 +889,27 @@
     "state": "Odisha",
     "address": "Mangalabag, Cuttack, Odisha 753007",
     "latitude": 20.4705,
-    "longitude": 85.8890,
+    "longitude": 85.889,
     "phone": "+91 671 241 4080",
     "emergency_24x7": true,
     "icu_beds": 90,
     "doctors_on_duty": 65,
     "beds_available": 1100,
     "ambulance_available": true,
-    "specialties": ["Level-1 Trauma", "Nephrology", "Cardiology", "Hepatology", "Pediatrics", "Hematology"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Thrombolytics", "Dialysis Consumables", "Emergency Inotropes"],
+    "specialties": [
+      "Level-1 Trauma",
+      "Nephrology",
+      "Cardiology",
+      "Hepatology",
+      "Pediatrics",
+      "Hematology"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Dialysis Consumables",
+      "Emergency Inotropes"
+    ],
     "operating_hours": "24 Hours Casualty & Emergency Trauma Center",
     "distance_km": 3.5
   },
@@ -603,10 +929,21 @@
     "doctors_on_duty": 50,
     "beds_available": 800,
     "ambulance_available": true,
-    "specialties": ["Apex Trauma", "Cardiology", "Oncology", "Pediatric Critical Care", "Neurosurgery"],
-    "medicines_in_stock": ["Advanced Chemotherapy", "Thrombolytics", "Anti-Snake Venom", "Inotropes"],
+    "specialties": [
+      "Apex Trauma",
+      "Cardiology",
+      "Oncology",
+      "Pediatric Critical Care",
+      "Neurosurgery"
+    ],
+    "medicines_in_stock": [
+      "Advanced Chemotherapy",
+      "Thrombolytics",
+      "Anti-Snake Venom",
+      "Inotropes"
+    ],
     "operating_hours": "24 Hours Emergency & Trauma Wing",
-    "distance_km": 8.0
+    "distance_km": 8
   },
   {
     "id": "hosp-030",
@@ -624,8 +961,19 @@
     "doctors_on_duty": 85,
     "beds_available": 1500,
     "ambulance_available": true,
-    "specialties": ["Level-1 Trauma", "Cardiology", "Organ Transplant", "Neurosurgery", "Toxicology"],
-    "medicines_in_stock": ["Trauma Resuscitation Formulary", "Anti-Snake Venom", "Thrombolytics", "Blood Products"],
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Organ Transplant",
+      "Neurosurgery",
+      "Toxicology"
+    ],
+    "medicines_in_stock": [
+      "Trauma Resuscitation Formulary",
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Blood Products"
+    ],
     "operating_hours": "24 Hours Super Speciality Emergency",
     "distance_km": 3.8
   },
@@ -645,10 +993,21 @@
     "doctors_on_duty": 95,
     "beds_available": 1700,
     "ambulance_available": true,
-    "specialties": ["Level-1 Trauma", "Cardiology", "Burns Center", "Pediatric Surgery", "Nephrology"],
-    "medicines_in_stock": ["Complete Trauma Formulary", "Anti-Snake Venom", "Dialysis Fluids", "Inotropes"],
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Burns Center",
+      "Pediatric Surgery",
+      "Nephrology"
+    ],
+    "medicines_in_stock": [
+      "Complete Trauma Formulary",
+      "Anti-Snake Venom",
+      "Dialysis Fluids",
+      "Inotropes"
+    ],
     "operating_hours": "24 Hours Apex Emergency & Casualty",
-    "distance_km": 4.0
+    "distance_km": 4
   },
   {
     "id": "hosp-032",
@@ -659,15 +1018,26 @@
     "state": "Chandigarh",
     "address": "Madhya Marg, Sector 12, Chandigarh 160012",
     "latitude": 30.7652,
-    "longitude": 76.7760,
+    "longitude": 76.776,
     "phone": "+91 172 274 7585",
     "emergency_24x7": true,
     "icu_beds": 140,
     "doctors_on_duty": 110,
     "beds_available": 1600,
     "ambulance_available": true,
-    "specialties": ["Level-1 Advanced Trauma", "Cardiothoracic", "Neurosurgery", "Hepatology", "Pediatric Intensive Care"],
-    "medicines_in_stock": ["Advanced Apex Critical Care Formulary", "Thrombolytics", "Anti-Snake Venom", "Blood Products"],
+    "specialties": [
+      "Level-1 Advanced Trauma",
+      "Cardiothoracic",
+      "Neurosurgery",
+      "Hepatology",
+      "Pediatric Intensive Care"
+    ],
+    "medicines_in_stock": [
+      "Advanced Apex Critical Care Formulary",
+      "Thrombolytics",
+      "Anti-Snake Venom",
+      "Blood Products"
+    ],
     "operating_hours": "24 Hours Advanced Trauma Center",
     "distance_km": 3.6
   },
@@ -687,8 +1057,19 @@
     "doctors_on_duty": 45,
     "beds_available": 700,
     "ambulance_available": true,
-    "specialties": ["Emergency Medicine", "Cardiology", "Pulmonology", "Gastroenterology", "Pediatrics"],
-    "medicines_in_stock": ["Anti-Snake Venom", "Cardiac Inotropes", "IV Fluids", "Antibiotics"],
+    "specialties": [
+      "Emergency Medicine",
+      "Cardiology",
+      "Pulmonology",
+      "Gastroenterology",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Cardiac Inotropes",
+      "IV Fluids",
+      "Antibiotics"
+    ],
     "operating_hours": "24 Hours Apex Emergency Care",
     "distance_km": 6.5
   },
@@ -708,8 +1089,19 @@
     "doctors_on_duty": 55,
     "beds_available": 900,
     "ambulance_available": true,
-    "specialties": ["Emergency Medicine", "Nipah & Infectious Diseases", "Cardiology", "Neurology", "Pediatrics"],
-    "medicines_in_stock": ["Specialized Antivirals", "Anti-Snake Venom", "ICU Inotropes", "IV Fluids"],
+    "specialties": [
+      "Emergency Medicine",
+      "Nipah & Infectious Diseases",
+      "Cardiology",
+      "Neurology",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Specialized Antivirals",
+      "Anti-Snake Venom",
+      "ICU Inotropes",
+      "IV Fluids"
+    ],
     "operating_hours": "24 Hours Emergency & Isolation Center",
     "distance_km": 5.8
   },
@@ -721,7 +1113,7 @@
     "district": "Chittoor",
     "state": "Andhra Pradesh",
     "address": "Near Fort Gate, Chandragiri, AP 517101",
-    "latitude": 13.5850,
+    "latitude": 13.585,
     "longitude": 79.3175,
     "phone": "+91 8572 277220",
     "emergency_24x7": true,
@@ -729,8 +1121,19 @@
     "doctors_on_duty": 3,
     "beds_available": 20,
     "ambulance_available": true,
-    "specialties": ["Maternal Health", "Immunization", "Basic Emergency Triage", "General Medicine"],
-    "medicines_in_stock": ["Paracetamol", "ORS", "Amoxicillin", "Iron Folic Acid", "Anti-Snake Venom (Initial Dose)"],
+    "specialties": [
+      "Maternal Health",
+      "Immunization",
+      "Basic Emergency Triage",
+      "General Medicine"
+    ],
+    "medicines_in_stock": [
+      "Paracetamol",
+      "ORS",
+      "Amoxicillin",
+      "Iron Folic Acid",
+      "Anti-Snake Venom (Initial Dose)"
+    ],
     "operating_hours": "24 Hours Rural Primary Care & Delivery",
     "distance_km": 12.5
   },
@@ -750,9 +1153,662 @@
     "doctors_on_duty": 4,
     "beds_available": 30,
     "ambulance_available": true,
-    "specialties": ["Emergency Stabilization", "Pediatrics", "Maternity", "General Care"],
-    "medicines_in_stock": ["Paracetamol", "ORS", "Antibiotics", "Anti-Snake Venom", "IV Normal Saline"],
+    "specialties": [
+      "Emergency Stabilization",
+      "Pediatrics",
+      "Maternity",
+      "General Care"
+    ],
+    "medicines_in_stock": [
+      "Paracetamol",
+      "ORS",
+      "Antibiotics",
+      "Anti-Snake Venom",
+      "IV Normal Saline"
+    ],
     "operating_hours": "24 Hours Emergency & First Referral Unit",
-    "distance_km": 24.0
+    "distance_km": 24
+  },
+  {
+    "id": "hosp-037",
+    "name": "King George Hospital (KGH) & Andhra Medical College",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Visakhapatnam",
+    "state": "Andhra Pradesh",
+    "address": "Maharanipeta, Collectorate Road, Visakhapatnam, AP 530002",
+    "latitude": 17.7089,
+    "longitude": 83.3056,
+    "phone": "+91 891 256 4891",
+    "emergency_24x7": true,
+    "icu_beds": 85,
+    "doctors_on_duty": 60,
+    "beds_available": 1200,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurosurgery",
+      "Pediatrics",
+      "Obstetrics",
+      "Toxicology"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Broad-Spectrum Antibiotics",
+      "IV Fluids",
+      "Morphine"
+    ],
+    "operating_hours": "24 Hours Emergency & Casualty Services",
+    "distance_km": 2.1
+  },
+  {
+    "id": "hosp-038",
+    "name": "Government General Hospital (GGH) Vijayawada",
+    "type": "Government Medical College Hospital",
+    "category": "Teaching Hospital",
+    "district": "NTR / Krishna",
+    "state": "Andhra Pradesh",
+    "address": "Gunadala, Hanumanpet, Vijayawada, AP 520008",
+    "latitude": 16.5165,
+    "longitude": 80.6382,
+    "phone": "+91 866 257 6666",
+    "emergency_24x7": true,
+    "icu_beds": 70,
+    "doctors_on_duty": 48,
+    "beds_available": 850,
+    "ambulance_available": true,
+    "specialties": [
+      "Casualty & Trauma",
+      "Cardiology",
+      "General Surgery",
+      "Orthopedics",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Emergency Trauma Formulary",
+      "Anti-Snake Venom",
+      "ORS",
+      "Inotropes"
+    ],
+    "operating_hours": "24 Hours Emergency & Trauma Care",
+    "distance_km": 1.8
+  },
+  {
+    "id": "hosp-039",
+    "name": "Guntur Government General Hospital (GGH)",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Guntur",
+    "state": "Andhra Pradesh",
+    "address": "Opp. Railway Station, Guntur, AP 522001",
+    "latitude": 16.2995,
+    "longitude": 80.4428,
+    "phone": "+91 863 222 4110",
+    "emergency_24x7": true,
+    "icu_beds": 65,
+    "doctors_on_duty": 42,
+    "beds_available": 900,
+    "ambulance_available": true,
+    "specialties": [
+      "Emergency Trauma",
+      "General Medicine",
+      "Burns Unit",
+      "Pediatrics",
+      "Nephrology"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Antirabies Vaccine",
+      "Dialysis Fluids",
+      "Antibiotics"
+    ],
+    "operating_hours": "24 Hours Emergency & Critical Care",
+    "distance_km": 2.4
+  },
+  {
+    "id": "hosp-040",
+    "name": "MGM Hospital & Kakatiya Medical College",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Warangal",
+    "state": "Telangana",
+    "address": "MGM Hospital Road, Warangal, Telangana 506007",
+    "latitude": 17.9812,
+    "longitude": 79.5985,
+    "phone": "+91 870 244 5555",
+    "emergency_24x7": true,
+    "icu_beds": 60,
+    "doctors_on_duty": 40,
+    "beds_available": 800,
+    "ambulance_available": true,
+    "specialties": [
+      "Casualty & Trauma",
+      "Cardiology",
+      "Orthopedics",
+      "Pediatrics",
+      "General Surgery"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Cardiac Drugs",
+      "IV Fluids",
+      "Antibiotics"
+    ],
+    "operating_hours": "24 Hours Emergency & Trauma Wing",
+    "distance_km": 2
+  },
+  {
+    "id": "hosp-041",
+    "name": "Krishnarajendra (KR) Hospital & Mysore Medical College",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Mysuru",
+    "state": "Karnataka",
+    "address": "Sayyaji Rao Road, Medar Block, Yadavagiri, Mysuru, Karnataka 570001",
+    "latitude": 12.3142,
+    "longitude": 76.6492,
+    "phone": "+91 821 252 0512",
+    "emergency_24x7": true,
+    "icu_beds": 55,
+    "doctors_on_duty": 38,
+    "beds_available": 750,
+    "ambulance_available": true,
+    "specialties": [
+      "Emergency Medicine",
+      "General Surgery",
+      "Cardiology",
+      "Pediatrics",
+      "Maternity"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Tetanus Toxoid",
+      "IV Normal Saline",
+      "Emergency Inotropes"
+    ],
+    "operating_hours": "24 Hours Emergency & Casualty Wing",
+    "distance_km": 1.5
+  },
+  {
+    "id": "hosp-042",
+    "name": "Government Wenlock District Hospital",
+    "type": "District Civil Hospital",
+    "category": "Teaching Hospital",
+    "district": "Dakshina Kannada",
+    "state": "Karnataka",
+    "address": "Hampankatta, Mangaluru, Karnataka 575001",
+    "latitude": 12.8682,
+    "longitude": 74.8435,
+    "phone": "+91 824 242 4310",
+    "emergency_24x7": true,
+    "icu_beds": 45,
+    "doctors_on_duty": 30,
+    "beds_available": 600,
+    "ambulance_available": true,
+    "specialties": [
+      "Trauma Care",
+      "General Medicine",
+      "Pediatrics",
+      "Obstetrics",
+      "Orthopedics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Rabies Immunoglobulins",
+      "IV Fluids",
+      "Antibiotics"
+    ],
+    "operating_hours": "24 Hours Emergency Services",
+    "distance_km": 2
+  },
+  {
+    "id": "hosp-043",
+    "name": "Coimbatore Medical College Hospital (CMCH)",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Coimbatore",
+    "state": "Tamil Nadu",
+    "address": "Trichy Road, Gopalapuram, Coimbatore, Tamil Nadu 641018",
+    "latitude": 11.0012,
+    "longitude": 76.9695,
+    "phone": "+91 422 230 1393",
+    "emergency_24x7": true,
+    "icu_beds": 75,
+    "doctors_on_duty": 50,
+    "beds_available": 950,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurosurgery",
+      "Pediatrics",
+      "Burns Unit"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Cardiac Drugs",
+      "IV Saline",
+      "Emergency Sedatives"
+    ],
+    "operating_hours": "24 Hours Emergency & Level-1 Trauma Care",
+    "distance_km": 2.2
+  },
+  {
+    "id": "hosp-044",
+    "name": "G.S.V.M. Medical College & Lala Lajpat Rai (LLR/Hallet) Hospital",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Kanpur Nagar",
+    "state": "Uttar Pradesh",
+    "address": "Swaroop Nagar, Kanpur, UP 208002",
+    "latitude": 26.4782,
+    "longitude": 80.3092,
+    "phone": "+91 512 253 5483",
+    "emergency_24x7": true,
+    "icu_beds": 80,
+    "doctors_on_duty": 55,
+    "beds_available": 1100,
+    "ambulance_available": true,
+    "specialties": [
+      "Emergency Medicine",
+      "Cardiology",
+      "Neurosurgery",
+      "Orthopedics",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Trauma Formulary",
+      "IV Fluids"
+    ],
+    "operating_hours": "24 Hours Trauma & Emergency Casualty",
+    "distance_km": 3.1
+  },
+  {
+    "id": "hosp-045",
+    "name": "S.N. Medical College & District Hospital Agra",
+    "type": "Government Medical College Hospital",
+    "category": "Teaching Hospital",
+    "district": "Agra",
+    "state": "Uttar Pradesh",
+    "address": "Moti Katra, Mantola, Agra, UP 282003",
+    "latitude": 27.1852,
+    "longitude": 78.0125,
+    "phone": "+91 562 226 0353",
+    "emergency_24x7": true,
+    "icu_beds": 60,
+    "doctors_on_duty": 40,
+    "beds_available": 800,
+    "ambulance_available": true,
+    "specialties": [
+      "Casualty & Trauma",
+      "General Medicine",
+      "Cardiology",
+      "Pediatrics",
+      "Burns"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Anti-Rabies Vaccines",
+      "IV Fluids",
+      "Broad-Spectrum Antibiotics"
+    ],
+    "operating_hours": "24 Hours Emergency & Casualty Services",
+    "distance_km": 2.5
+  },
+  {
+    "id": "hosp-046",
+    "name": "Swaroop Rani Nehru (SRN) Hospital & MLN Medical College",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Prayagraj",
+    "state": "Uttar Pradesh",
+    "address": "MG Marg, George Town, Prayagraj, UP 211002",
+    "latitude": 25.4485,
+    "longitude": 81.8542,
+    "phone": "+91 532 225 6112",
+    "emergency_24x7": true,
+    "icu_beds": 70,
+    "doctors_on_duty": 45,
+    "beds_available": 900,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Neurosurgery",
+      "Cardiology",
+      "Pediatrics",
+      "Orthopedics"
+    ],
+    "medicines_in_stock": [
+      "Trauma Emergency Drug Kit",
+      "Anti-Snake Venom",
+      "IV Fluids",
+      "Inotropes"
+    ],
+    "operating_hours": "24 Hours Emergency Trauma Center",
+    "distance_km": 2.8
+  },
+  {
+    "id": "hosp-047",
+    "name": "All India Institute of Medical Sciences (AIIMS) Jodhpur",
+    "type": "Super Speciality Hospital",
+    "category": "Apex Institute",
+    "district": "Jodhpur",
+    "state": "Rajasthan",
+    "address": "Basni Industrial Area Phase-2, Jodhpur, Rajasthan 342005",
+    "latitude": 26.2412,
+    "longitude": 73.0185,
+    "phone": "+91 291 274 0741",
+    "emergency_24x7": true,
+    "icu_beds": 75,
+    "doctors_on_duty": 50,
+    "beds_available": 750,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurosurgery",
+      "Pulmonology",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Advanced Antivirals",
+      "Cardiac Inotropes",
+      "Broad Spectrum Antibiotics"
+    ],
+    "operating_hours": "24 Hours Apex Emergency & Trauma Center",
+    "distance_km": 3.5
+  },
+  {
+    "id": "hosp-048",
+    "name": "New Civil Hospital Surat & Government Medical College",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Surat",
+    "state": "Gujarat",
+    "address": "Majura Gate, Ring Road, Surat, Gujarat 395001",
+    "latitude": 21.1765,
+    "longitude": 72.8225,
+    "phone": "+91 261 224 4175",
+    "emergency_24x7": true,
+    "icu_beds": 80,
+    "doctors_on_duty": 55,
+    "beds_available": 1050,
+    "ambulance_available": true,
+    "specialties": [
+      "Trauma & Critical Care",
+      "Cardiology",
+      "Burns Center",
+      "Pediatrics",
+      "Nephrology"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Burns Dressings",
+      "IV Fluids"
+    ],
+    "operating_hours": "24 Hours Apex Emergency & Casualty",
+    "distance_km": 2.1
+  },
+  {
+    "id": "hosp-049",
+    "name": "Government Medical College Hospital Ernakulam (Kochi)",
+    "type": "Government Medical College Hospital",
+    "category": "Teaching Hospital",
+    "district": "Ernakulam",
+    "state": "Kerala",
+    "address": "HMT Colony, Kalamassery, Kochi, Kerala 683503",
+    "latitude": 10.0545,
+    "longitude": 76.3582,
+    "phone": "+91 484 275 4000",
+    "emergency_24x7": true,
+    "icu_beds": 60,
+    "doctors_on_duty": 42,
+    "beds_available": 700,
+    "ambulance_available": true,
+    "specialties": [
+      "Emergency Medicine",
+      "Cardiology",
+      "Infectious Diseases",
+      "Pediatrics",
+      "Neurosurgery"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Antivirals",
+      "IV Fluids",
+      "Inotropes"
+    ],
+    "operating_hours": "24 Hours Emergency & Trauma Care",
+    "distance_km": 4.2
+  },
+  {
+    "id": "hosp-050",
+    "name": "Government Medical College Hospital Thiruvananthapuram (Trivandrum MCH)",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Thiruvananthapuram",
+    "state": "Kerala",
+    "address": "Medical College PO, Thiruvananthapuram, Kerala 695011",
+    "latitude": 8.5225,
+    "longitude": 76.9285,
+    "phone": "+91 471 252 8300",
+    "emergency_24x7": true,
+    "icu_beds": 95,
+    "doctors_on_duty": 70,
+    "beds_available": 1300,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurosurgery",
+      "Oncology",
+      "Toxicology & Snakebite Center"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom (Full Protocol)",
+      "Thrombolytics",
+      "Cardiac Resuscitation Kit",
+      "Blood Components"
+    ],
+    "operating_hours": "24 Hours Comprehensive Emergency & Trauma Wing",
+    "distance_km": 3
+  },
+  {
+    "id": "hosp-051",
+    "name": "Maharaja Yeshwantrao (MY) Hospital & MGM Medical College",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Indore",
+    "state": "Madhya Pradesh",
+    "address": "MY Hospital Road, Sanyogitaganj, Indore, MP 452001",
+    "latitude": 22.7162,
+    "longitude": 75.8752,
+    "phone": "+91 731 252 7383",
+    "emergency_24x7": true,
+    "icu_beds": 85,
+    "doctors_on_duty": 58,
+    "beds_available": 1100,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Burns Unit",
+      "Pediatrics",
+      "Neurosurgery"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Emergency Antibiotics",
+      "IV Fluids"
+    ],
+    "operating_hours": "24 Hours Emergency Trauma & Casualty",
+    "distance_km": 2.3
+  },
+  {
+    "id": "hosp-052",
+    "name": "Gauhati Medical College and Hospital (GMCH)",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "Kamrup Metropolitan",
+    "state": "Assam",
+    "address": "Narakasur Hilltop, Bhangagarh, Guwahati, Assam 781032",
+    "latitude": 26.1582,
+    "longitude": 91.7685,
+    "phone": "+91 361 213 0244",
+    "emergency_24x7": true,
+    "icu_beds": 90,
+    "doctors_on_duty": 65,
+    "beds_available": 1200,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Emergency Pediatrics",
+      "Oncology",
+      "Tropical Diseases"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Antimalarials",
+      "Japanese Encephalitis Kits",
+      "IV Fluids"
+    ],
+    "operating_hours": "24 Hours Emergency & Apex Trauma Care",
+    "distance_km": 3.2
+  },
+  {
+    "id": "hosp-053",
+    "name": "Rajendra Institute of Medical Sciences (RIMS)",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Autonomous Institute",
+    "district": "Ranchi",
+    "state": "Jharkhand",
+    "address": "Bariatu Road, Ranchi, Jharkhand 834009",
+    "latitude": 23.3865,
+    "longitude": 85.3522,
+    "phone": "+91 651 254 1533",
+    "emergency_24x7": true,
+    "icu_beds": 75,
+    "doctors_on_duty": 50,
+    "beds_available": 1000,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurosurgery",
+      "Pediatrics",
+      "Orthopedics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Inotropes",
+      "Broad Spectrum Antibiotics"
+    ],
+    "operating_hours": "24 Hours Emergency & Critical Trauma",
+    "distance_km": 3.8
+  },
+  {
+    "id": "hosp-054",
+    "name": "All India Institute of Medical Sciences (AIIMS) Raipur",
+    "type": "Super Speciality Hospital",
+    "category": "Apex Institute",
+    "district": "Raipur",
+    "state": "Chhattisgarh",
+    "address": "GE Road, Tatibandh, Raipur, Chhattisgarh 492099",
+    "latitude": 21.2582,
+    "longitude": 81.5792,
+    "phone": "+91 771 257 7200",
+    "emergency_24x7": true,
+    "icu_beds": 70,
+    "doctors_on_duty": 48,
+    "beds_available": 750,
+    "ambulance_available": true,
+    "specialties": [
+      "Apex Trauma",
+      "Cardiology",
+      "Pulmonology",
+      "Pediatric Intensive Care",
+      "Neurosurgery"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Cardiac Drugs",
+      "Dialysis Consumables",
+      "IV Fluids"
+    ],
+    "operating_hours": "24 Hours Apex Emergency Care",
+    "distance_km": 4.5
+  },
+  {
+    "id": "hosp-055",
+    "name": "Doon Government Medical College Hospital",
+    "type": "Government Medical College Hospital",
+    "category": "Teaching Hospital",
+    "district": "Dehradun",
+    "state": "Uttarakhand",
+    "address": "Patel Nagar, Dehradun, Uttarakhand 248001",
+    "latitude": 30.3112,
+    "longitude": 78.0245,
+    "phone": "+91 135 272 6020",
+    "emergency_24x7": true,
+    "icu_beds": 50,
+    "doctors_on_duty": 35,
+    "beds_available": 600,
+    "ambulance_available": true,
+    "specialties": [
+      "Emergency Trauma",
+      "General Medicine",
+      "Orthopedics",
+      "Cardiology",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Rabies Immunoglobulins",
+      "Antibiotics",
+      "IV Fluids"
+    ],
+    "operating_hours": "24 Hours Emergency Casualty Service",
+    "distance_km": 2.2
+  },
+  {
+    "id": "hosp-056",
+    "name": "Goa Medical College and Hospital (GMC)",
+    "type": "Government Medical College Hospital",
+    "category": "Apex Teaching Hospital",
+    "district": "North Goa",
+    "state": "Goa",
+    "address": "NH 66, Bambolim, Goa 403202",
+    "latitude": 15.4615,
+    "longitude": 73.8562,
+    "phone": "+91 832 245 8700",
+    "emergency_24x7": true,
+    "icu_beds": 65,
+    "doctors_on_duty": 45,
+    "beds_available": 800,
+    "ambulance_available": true,
+    "specialties": [
+      "Level-1 Trauma",
+      "Cardiology",
+      "Neurosurgery",
+      "Toxicology",
+      "Pediatrics"
+    ],
+    "medicines_in_stock": [
+      "Anti-Snake Venom",
+      "Thrombolytics",
+      "Emergency Fluids",
+      "Inotropes"
+    ],
+    "operating_hours": "24 Hours Apex Emergency & Casualty",
+    "distance_km": 5
   }
 ]

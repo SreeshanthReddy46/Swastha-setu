@@ -162,8 +162,16 @@ body {
   will-change: transform;
 }
 
+.leaflet-3d-marker-badge.badge-govt {
+  background: #0F6E56;
+}
+
+.leaflet-3d-marker-badge.badge-private {
+  background: #4338CA;
+}
+
 .leaflet-3d-marker-badge.selected {
-  background: #D85A30;
+  background: #D85A30 !important;
   transform: translate3d(0, -10px, 0) scale(1.1);
   z-index: 1000 !important;
 }
