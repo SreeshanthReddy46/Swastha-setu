@@ -1,149 +1,209 @@
-# Swastha Setu ("स्वास्थ्य सेतु") — Voice-First Rural Health Triage, All-Hospital & Blood Bank Locator
+# Swastha Setu ("स्वास्थ्य सेतु") — Voice-First Rural Health Triage, All-Hospital & Emergency Blood Bank Locator
 
 > **Health guidance in your language, for everyone.**  
-> Swastha Setu is a production-grade, voice-first rural public health triage platform, Open Government Healthcare & Emergency Blood Bank Locator designed to connect patients directly to all types of nearby hospitals (District Civil Hospitals, Super Speciality Centers, Medical Colleges, Maternity Hospitals, Trauma Centers, PHCs & CHCs) and blood banks across India.
+> Swastha Setu is a high-performance, voice-first public health triage platform, Open Government Healthcare & Emergency Blood Bank Locator designed to connect citizens directly to verified government healthcare facilities (AIIMS, District Civil Hospitals, Medical Colleges, Trauma Centers, PHCs/CHCs), live private hospitals via OpenStreetMap, and emergency blood banks across India.
 
 ---
 
-## 🌟 Key Highlights & All-Hospital & Blood Bank Features
+## 🌟 Key Features & Capabilities
 
-- 🎯 **Single-Line Desktop Navigation Bar (`Header.tsx`)**: Strictly enforced single-line horizontal flex row (`flex-nowrap`, `whitespace-nowrap`) preventing multi-line wrapping while preserving Framer Motion `layoutId="activeIndicator"` spring transitions.
-- 🩸 **Emergency Blood Bank Locator (`app/(app)/blood-banks/page.tsx`)**:
-  - Live GPS location detection button (**"📍 Detect My Location for Blood Banks"**).
-  - **Filter by Blood Group & Components:** Filter instantly by `O+`, `O- Universal`, `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`, `Platelets (SDP/RDP)`, and `FFP (Plasma)`.
-  - **Stock Matrix Grid:** Displays exact available blood units (e.g. *45 Units O+, 8 Units O- Universal, 25 Platelet Units*).
-  - **Staff & Medical Officers:** Displays active technician count and Medical Officer In Charge.
-- ⚡ **Ultra-Low-End Device & 2G/3G Network Optimization**:
-  - **Lightweight Footprint (<200KB):** Ultra-optimized JavaScript bundle and dynamic Leaflet code-splitting.
-  - **GPU Hardware Acceleration:** Uses `transform: translateZ(0)` and `.gpu-accelerated` compositing layers to prevent animation lag on budget Android smartphones ($50–$100 phones).
-  - **Battery Saver & Reduced Motion Safeguards:** Built-in `@media (prefers-reduced-motion: reduce)` support to instantly disable heavy animations when a low-end phone enters battery saver mode.
-  - **Text Rendering Speed:** Optimized CSS `text-rendering: optimizeSpeed` for instant font rendering on low-RAM CPUs.
-- 🔊 **Glitch-Free Multi-Language Voice Assistant Engine (`lib/voice-assistant-engine.ts`)**:
-  - Matches BCP-47 language codes for all 9 Indian regional languages (`hi-IN`, `te-IN`, `ta-IN`, `kn-IN`, `bn-IN`, `mr-IN`, `gu-IN`, `or-IN`, `en-IN`).
-  - **Text Sanitization:** Cleans markdown symbols, normalizes numbers (`108` → `one zero eight`), and expands units (`km` → `kilometers`) to eliminate audio stuttering and speech cut-offs.
-  - **Rural Accessibility Pacing:** Configured with a comfortable, steady speech rate (`0.92`) and volume control (`1.0`) so elderly rural users can understand clinical advice clearly.
-- 🌐 **9 Major Indian Regional Languages Supported (`lib/language-context.tsx`)**:
-  - **English (en)**, **Hindi (hi - हिंदी)**, **Telugu (te - తెలుగు)**, **Tamil (ta - தமிழ்)**, **Kannada (kn - ಕನ್ನಡ)**, **Bengali (bn - বাংলা)**, **Marathi (mr - मराठी)**, **Gujarati (gu - ગુજરાતી)**, **Odia (or - ଓଡ଼ିଆ)**.
-- ✨ **Animated Language Switch Toast Banner**: Shifting languages triggers an animated top toast notification banner (`🌐 Switched Language to தமிழ் (Tamil)`) with smooth Framer Motion `AnimatePresence`.
-- 🧠 **LLM AI Clinical Intelligence & Risk Matrix (`lib/triage-engine.ts`)**: Evaluates symptoms with an AI diagnostic confidence rating (e.g. `99.2% AI Confidence`), primary risk vector analysis, differential urgency class, and safety compliance verification.
-- 🔬 **Live Medical Research Intelligence Engine**: For rare, emerging, or complex clinical symptoms (e.g. viral outbreaks, acute febrile illness, vector-borne pathogens, severe gastroenteritis), the triage engine automatically cross-references authoritative medical protocols (**WHO Disease Outbreak News**, **ICMR National Institute of Virology Guidelines**, **MoHFW India Health Bulletins**). Displays:
-  - **Verified Clinical Protocol & Disease Analysis**
-  - **Recommended Diagnostic Lab Tests** (e.g., Dengue NS1 Antigen, CBC with Platelet Count, Troponin Biomarkers, Stool Culture)
-  - **Clinical Precautions & Warning Signs**
-- 🏥 **Comprehensive All-Hospital Dataset Index (`data/phc-seed.json`)**: Expanded beyond basic PHCs to index **all hospital categories**:
-  - **District Civil & General Hospitals** (e.g. Chittoor District Civil Hospital, Medak District Headquarters Hospital, Rae Bareli Sadar Hospital, Muzaffarpur Sadar Hospital)
-  - **Super Speciality Centers & Apex Institutes** (e.g. SVIMS Tirupati, AIIMS Bibinagar, AIIMS Rae Bareli, Safdarjung Hospital Delhi, Narayana Health City)
-  - **Government Medical Colleges & Teaching Hospitals** (e.g. Siddipet Medical College, SKMCH Muzaffarpur, Victoria Hospital Bengaluru)
-  - **Speciality Maternity & Children Hospitals** (e.g. Rae Bareli District Women Hospital)
-  - **Level-1 Emergency Trauma Centers & Multispecialty Hospitals**
-- 📍 **Accurate Live GPS Proximity Engine**: Real-time browser Geolocation API (`navigator.geolocation`) calculates accurate Haversine distances to all nearby hospitals and blood banks (`0.8 km`, `1.5 km`, `3.4 km`).
-- 🌐 **3D Isometric Map Perspective Mode**: Leaflet.js + OpenStreetMap integration featuring a 3D Tilt View mode toggle, glowing user location marker, and floating 3D distance badges directly on hospital map pins.
-- 🚨 **Emergency 108 SOS Dispatch Modal (`components/EmergencySOSModal.tsx`)**: Floating SOS button providing 1-click direct dialing for 108 Ambulance, 102 Maternity, and 104 Helplines. Automatically reads the user's exact live GPS coordinates (`Latitude: 13.2172° N, Longitude: 79.1003° E`) so they can read it aloud to the 108 operator.
+### 1. 🏥 Live Hybrid Hospital & Facility Locator (`lib/osm-service.ts`, `app/api/facilities/route.ts`)
+- **Live OpenStreetMap (OSM) Overpass Integration**: Dynamically queries nearby hospitals, nursing homes, and clinics for any coordinate and radius without requiring billed API keys.
+- **High-Availability Multi-Mirror Fallback**: Automatically queries prioritized public Overpass mirrors (`lz4.overpass-api.de`, `overpass-api.de`, `maps.mail.ru`, `overpass.kumi.systems`).
+- **Resilient 3.5s Timeout Gate**: Non-blocking `AbortController` timeout ensures external API slowdowns never break the application, falling back seamlessly to seeded government PHC data.
+- **In-Memory 15-Minute Grid Caching**: Coordinates are cached by $\approx 1.1\text{km}$ grid tiles to prevent rate-limiting and deliver sub-millisecond responses on repeated queries.
+- **Spatial Deduplication Engine ($\le 100\text{m}$)**: Automatically detects when an OpenStreetMap node matches an existing seeded government PHC within 100 meters (or 500m with name similarity), preserving the verified government database record with rich bed and doctor metadata.
+- **Ownership Classification & Filtering**:
+  - `🏛️ Government (PHC / CHC / District / AIIMS)`: Tagged from official government datasets and verified public institutions.
+  - `🏥 Private Hospitals & Clinics (OSM)`: Tagged from live OpenStreetMap records.
+  - Interactive UI filters allow filtering by **All Facilities**, **Government Only**, or **Private Only**.
+- **Interactive 3D Leaflet Map (`FacilityMap.client.tsx`)**:
+  - 3D Tilt View vs 2D Flat View toggle.
+  - Color-coded marker badges (Emerald for Government, Indigo for Private).
+  - Live GPS glowing user radius circle (10km radius).
+  - Rich popups with distance, 24/7 emergency status, address, and direct dialing.
 
 ---
 
-## 🎨 Color Palette — "Warm Trust"
+### 2. 🩸 Emergency Blood Bank Locator (`app/(app)/blood-banks/page.tsx`, `lib/blood-bank-service.ts`)
+- **GPS-Powered Nearest Blood Bank Detection**: Calculates exact Haversine distance from the user's location.
+- **Blood Group & Component Stock Matrix**:
+  - Filter by blood group: `O+`, `O- Universal`, `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`.
+  - Filter by specialized blood components: `Platelets (SDP / RDP)` and `FFP (Fresh Frozen Plasma)`.
+- **Live Availability Metrics**: Displays verified units available in stock, storage temperature status, active technicians on duty, and Medical Officer In Charge.
+- **Instant Calling**: Direct one-tap click-to-call for emergency blood dispatch.
+
+---
+
+### 3. 🔊 Voice-First Multilingual Triage Engine (`lib/voice-assistant-engine.ts`, `lib/triage-engine.ts`)
+- **9 Major Indian Regional Languages Supported**:
+  - English (`en`), Hindi (`hi`), Telugu (`te`), Tamil (`ta`), Kannada (`kn`), Bengali (`bn`), Marathi (`mr`), Gujarati (`gu`), Odia (`or`).
+- **Speech Recognition & Synthesis**: Web Speech API integration with normalized speech pacing (`0.92`), text sanitization (cleans markdown, normalizes numbers like `108` to spoken words, expands units), and fallback text-to-speech.
+- **Spoken Location Detection (`lib/location-service.ts`)**: Automatically extracts spoken district/city names from audio transcriptions when GPS coordinates are unavailable.
+- **Clinical Urgency Assessment**:
+  - `EMERGENCY`: Immediate 108 ambulance dispatch and level-1 trauma / ICU hospital recommendation.
+  - `HIGH`: Same-day hospital / district civil hospital consultation.
+  - `MODERATE`: 24-hour primary health centre consultation.
+  - `ROUTINE`: Home care guidance, hydration, and local PHC OPD visit.
+- **Live Medical Research Intelligence Engine**: Cross-references symptoms against authoritative WHO, ICMR, and MoHFW disease outbreak protocols for emerging vector-borne pathogens, gastroenteritis, and acute febrile illnesses, displaying recommended lab tests (e.g. Dengue NS1, Troponin, CBC Platelet counts) and clinical precautions.
+
+---
+
+### 4. 👩‍⚕️ ASHA & Frontline Health Worker Toolkit (`components/AshaToolkit.tsx`)
+- **Oral Rehydration Salts (ORS) Preparation Protocols**: Step-by-step ratio and hygiene instructions for rural dehydration management.
+- **Maternal & Child Health Checklist**: Danger signs during pregnancy, delivery preparedness, and emergency 102 transport.
+- **National Immunization Schedule Reference**: Essential vaccine timelines for infants and mothers.
+- **Offline Triage Cards**: Quick visual reference sheets for community health workers.
+
+---
+
+### 5. 🚨 Emergency 108 SOS Dispatch Modal (`components/EmergencySOSModal.tsx`)
+- Floating emergency trigger on all pages.
+- 1-tap direct dialing for **108 (National Ambulance)**, **102 (Maternity Transport)**, and **104 (Medical Advice Helpline)**.
+- Real-time GPS coordinate readout (`Latitude: 13.2172° N, Longitude: 79.1003° E`) formatted for clear vocal communication to emergency dispatch operators.
+
+---
+
+## 🎨 Design System — "Warm Trust"
 
 | Role | Color Name | Hex Code | Purpose |
 |---|---|---|---|
-| Primary | Deep Teal | `#0F6E56` | Header logos, nav active highlights, routine urgency badges |
-| Warm Accent | Terracotta | `#D85A30` | Main CTA buttons, "Start Check-Up", emergency badges |
+| Primary | Deep Teal | `#0F6E56` | Headers, active navigation highlights, verified government badges |
+| Warm Accent | Terracotta | `#D85A30` | Primary CTA buttons, emergency highlights, distance pills |
 | Alert | Urgent Red | `#A32D2D` | High/Emergency triage warnings & 108 emergency bar |
-| Background | Warm Cream | `#FAF6EE` | Soft, warm background across marketing & app views |
-| Surface | Pure White | `#FFFFFF` | Interactive cards, form containers, and map cards |
+| Background | Warm Cream | `#FAF6EE` | Soft, accessible warm background |
+| Surface | Pure White | `#FFFFFF` | Cards, modals, and interactive map containers |
+| Secondary Tag | Indigo Slate | `#4338CA` | Live OpenStreetMap private hospital badges |
 | Text Primary | Charcoal | `#2C2418` | High-contrast readable typography |
 | Text Secondary | Warm Gray | `#6B6355` | Subtitles, labels, and secondary details |
-| Moderate | Muted Gold | `#BA7517` | Moderate urgency triage badge |
-| Footer | Dark Charcoal Teal | `#0C443A` | Footer background with permanent medical disclaimer |
 
 ---
 
-## 🗺️ Sitemap & Single-Page Anchors
+## 📡 API Endpoints Reference
 
-Swastha Setu features a unified single-page scrolling homepage with smooth scroll section anchors, alongside a dedicated app triage shell:
+### 1. Facilities API (`GET /api/facilities`)
+Returns verified government PHCs/hospitals merged with live OpenStreetMap healthcare facilities.
 
-| Route / Anchor | Name | Content Description |
-|---|---|---|
-| `/#hero` | Hero | Value proposition, mic motif, multi-language prompt visual |
-| `/#about` | About | Rural care gap, Ayushman Bharat narrative, scope boundaries ("What this is NOT") |
-| `/#how-it-works` | How It Works | 4-step process strip, speech fallback callouts |
-| `/#features` | Features | 6-card capabilities grid |
-| `/#impact` | Impact | 1,404 PHCs & Hospitals indexed, horizontal scroll district showcase carousel |
-| `/#faq` | FAQ | Categorized accordions for Trust & Safety, Tool Usage, NGOs |
-| `/#get-involved` | Get Involved | Asha Frontline ORS toolkit & deployment guides |
-| `/#contact` | Contact | Interactive message form & project contact details |
-| `/check-up` | Voice Check-Up | Interactive voice intake & body-map symptom selector |
-| `/result/[id]` | Triage Result | Urgency card, audio TTS reader, action steps, hospital type recommendation, Live Medical Research Intelligence |
-| `/locator` | All-Hospital Locator | Live GPS sorting, hospital category filters, ICU bed metrics, 3D map perspective |
-| `/blood-banks` | Emergency Blood Banks | Live GPS blood bank locator, blood group & component stock matrix (O-, O+, A+, Platelets, FFP) |
-| `/facility/[id]` | Hospital Profile | Doctors on duty, ICU beds, medicine stock, call button, Google Maps link |
+**Parameters:**
+- `lat` (float, optional): User latitude.
+- `lng` (float, optional): User longitude.
+- `q` (string, optional): Search keyword (hospital name, district, specialty).
+- `emergency` (boolean, optional): Filter for 24/7 emergency & ICU facilities only.
+- `ownership` (string, optional): `'government'` or `'private'`.
+- `id` (string, optional): Retrieve a single facility by ID.
+
+**Example Response:**
+```json
+{
+  "facilities": [
+    {
+      "id": "phc-001",
+      "name": "Chittoor Government District Hospital",
+      "type": "District Civil Hospital",
+      "ownership": "government",
+      "source": "seeded_phc",
+      "district": "Chittoor",
+      "state": "Andhra Pradesh",
+      "address": "Collectorate Road, Greamspet, Chittoor, AP 517001",
+      "latitude": 13.2172,
+      "longitude": 79.1003,
+      "phone": "+91 8572 222 450",
+      "emergency_24x7": true,
+      "icu_beds": 24,
+      "doctors_on_duty": 18,
+      "beds_available": 350,
+      "ambulance_available": true,
+      "specialties": ["Level-1 Trauma", "Cardiology", "General Surgery"],
+      "distance_km": 0.8
+    },
+    {
+      "id": "osm-node-10827364",
+      "name": "Apollo Clinic & Diagnostic Centre",
+      "type": "Private Hospital / Clinic",
+      "ownership": "private",
+      "source": "osm",
+      "district": "Chittoor",
+      "state": "Andhra Pradesh",
+      "address": "High Road, Chittoor",
+      "latitude": 13.2210,
+      "longitude": 79.1045,
+      "phone": "108 (National Emergency)",
+      "emergency_24x7": false,
+      "doctors_on_duty": 1,
+      "ambulance_available": false,
+      "specialties": ["General Medicine", "OPD Care"],
+      "distance_km": 1.2
+    }
+  ],
+  "userCoords": { "lat": 13.2172, "lng": 79.1003 },
+  "totalCount": 2
+}
+```
+
+### 2. Blood Banks API (`GET /api/blood-banks`)
+Returns emergency blood bank locations with live component inventory.
+
+**Parameters:**
+- `lat` (float, optional): User latitude.
+- `lng` (float, optional): User longitude.
+- `q` (string, optional): Blood bank name or city.
+- `bloodGroup` (string, optional): e.g. `'O+'`, `'O-'`, `'A+'`, `'B+'`, `'AB+'`.
+- `component` (string, optional): `'platelets'` or `'plasma'`.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Frontend Framework**: Next.js 14 / 16 (App Router) + TypeScript
-- **Styling & Design**: Tailwind CSS v4 + Custom "Warm Trust" design system
-- **Animations**: Framer Motion (GPU hardware-accelerated viewport reveals, floating badges, page transitions, language switch toast)
-- **Voice Recognition**: Web Speech API (`SpeechRecognition` / `webkitSpeechRecognition`)
-- **Voice Synthesis**: Web Speech Synthesis API (`SpeechSynthesisUtterance`) with `lib/voice-assistant-engine.ts`
-- **Mapping**: Leaflet.js + OpenStreetMap with custom 3D Leaflet `divIcon` badges
-- **Geospatial Engine**: Haversine formula distance calculation (`lib/facility-service.ts`)
-- **Triage Classifier**: Rule-based structured JSON triage evaluator (`lib/triage-engine.ts`)
-- **Dataset**: Open Government Data seed dataset (`data/phc-seed.json` & `data/blood-bank-seed.json`) covering District Hospitals, Medical Colleges, AIIMS institutes, Super Speciality Centers, Blood Banks, and PHCs across India.
+- **Framework**: Next.js 15 / 16 (App Router) + TypeScript
+- **Styling**: Tailwind CSS v4 + Custom "Warm Trust" design tokens
+- **Animations**: Framer Motion (GPU hardware-accelerated viewport transitions and active tabs)
+- **Mapping**: Leaflet.js + OpenStreetMap with custom 3D isometric markers
+- **External Data**: OpenStreetMap Overpass QL API (with multi-mirror redundancy)
+- **Voice APIs**: Web Speech API (`SpeechRecognition`, `SpeechSynthesisUtterance`)
+- **Geospatial Processing**: High-precision Haversine formula distance calculations
 
 ---
 
-## 🚀 Getting Started & Local Development
+## 🚀 Getting Started & Local Setup
 
 ### Prerequisites
-
 - Node.js 18.x or higher
 - npm, pnpm, or yarn
 
-### Installation & Running Locally
+### Installation
+```bash
+# 1. Clone the repository
+git clone https://github.com/SreeshanthReddy46/Swastha-setu.git
+cd Swastha-setu
 
-1. Clone or navigate to the project workspace:
-   ```bash
-   cd swastha-setu
-   ```
+# 2. Install dependencies
+npm install
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to view the platform.
+# 3. Start local development server
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
 ### Building for Production
-
-To compile and verify the Next.js production bundle:
 ```bash
+# Compile and verify production bundle
 npm run build
-```
 
-To run TypeScript type checks:
-```bash
+# Run TypeScript type verification
 npx tsc --noEmit
 ```
 
 ---
 
-## 🔒 Scope Boundaries & Academic Disclaimer
+## 🔒 Scope Boundaries & Disclaimer
 
-Swastha Setu is created as a public health research and educational project.
-
-- **NOT a Medical Diagnosis Tool**: Swastha Setu categorizes symptom urgency to guide timely facility visits. It does not provide clinical diagnoses.
-- **NOT a Doctor Replacement**: It connects citizens to qualified human medical officers at District Hospitals, Super Speciality Centers, and Primary Health Centres.
-- **For Emergency Services**: For life-threatening medical emergencies, dial **108** immediately.
+Swastha Setu is designed as a public health assistance and triage navigation platform:
+- **NOT a Diagnostic Tool**: It assesses symptom urgency to guide timely facility visits. It does not replace medical diagnostics.
+- **NOT a Doctor Replacement**: It directs patients to qualified medical professionals at certified facilities.
+- **For Medical Emergencies**: Always dial **108** immediately in life-threatening situations.
 
 ---
 
 ## 📄 License
 
-Built as an open public health initiative under the MIT License.
+Open-source under the [MIT License](LICENSE).
