@@ -166,25 +166,43 @@ Returns emergency blood bank locations with live component inventory.
 
 ## 🚀 Getting Started & Local Setup
 
-### Prerequisites
-- Node.js 18.x or higher
-- npm, pnpm, or yarn
+### Option A: 🐳 Run with Docker (Recommended for Any Laptop / OS)
 
-### Installation
+You can run Swastha Setu on any machine (Windows, macOS, Linux) with Docker installed without setting up Node.js or local dependencies:
+
 ```bash
 # 1. Clone the repository
 git clone https://github.com/SreeshanthReddy46/Swastha-setu.git
 cd Swastha-setu
 
-# 2. Install dependencies
+# 2. Build and start with Docker Compose
+docker compose up --build
+
+# Or using plain Docker:
+docker build -t swastha-setu .
+docker run -p 3000:3000 swastha-setu
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+### Option B: Local Node.js Setup
+
+#### Prerequisites
+- Node.js 18.x or higher
+- npm, pnpm, or yarn
+
+#### Installation & Startup
+```bash
+# 1. Install dependencies
 npm install
 
-# 3. Start local development server
+# 2. Start development server
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
-### Building for Production
+#### Building for Production Locally
 ```bash
 # Compile and verify production bundle
 npm run build
