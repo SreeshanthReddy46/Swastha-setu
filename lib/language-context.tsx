@@ -1,8 +1,9 @@
 'use client';
 
-import React, { createContext, useContext, useState, useSyncExternalStore } from 'react';
+import React, { createContext, useContext, useState, useEffect, useSyncExternalStore } from 'react';
 import { motion as m, AnimatePresence } from 'framer-motion';
-import { Globe } from 'lucide-react';
+import { Globe, MapPin } from 'lucide-react';
+import { detectLocationAndLanguageInstantly } from './geo-language-detector';
 
 export type Language = 'en' | 'hi' | 'te' | 'ta' | 'kn' | 'bn' | 'mr' | 'gu' | 'or';
 
@@ -334,11 +335,34 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const language = localLanguage || syncedLanguage;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Auto-detect location and regional language in fraction of a second on initial site open
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const hasUserManuallySet = localStorage.getItem('swastha_user_manually_set') === 'true';
+
+    detectLocationAndLanguageInstantly().then((locResult) => {
+      if (!hasUserManuallySet && locResult.language && locResult.language !== language) {
+        setLocalLanguage(locResult.language);
+        try {
+          localStorage.setItem('swastha_setu_lang', locResult.language);
+          window.dispatchEvent(new Event('language-change'));
+        } catch {
+          // Ignore
+        }
+        const langInfo = languageNames[locResult.language];
+        setToastMessage(`📍 Location: ${locResult.city}, ${locResult.state} — Language set to ${langInfo.native} (${langInfo.english})`);
+        setTimeout(() => setToastMessage(null), 3500);
+      }
+    });
+  }, []);
+
   const setLanguage = (lang: Language) => {
     setLocalLanguage(lang);
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('swastha_setu_lang', lang);
+        localStorage.setItem('swastha_user_manually_set', 'true');
         window.dispatchEvent(new Event('language-change'));
       } catch {
         // Ignore

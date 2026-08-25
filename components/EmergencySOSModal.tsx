@@ -3,8 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion as m, AnimatePresence } from 'framer-motion';
 import { PhoneCall, X, ShieldAlert, Volume2, VolumeX, Copy, Check } from 'lucide-react';
+import { useLanguage, languageNames } from '@/lib/language-context';
+import { speakTextInLanguage, stopVoiceSpeech, getVoiceEmergencyGuidelines } from '@/lib/voice-assistant-engine';
+import { getSarvamVoiceConfig } from '@/lib/sarvam-config';
 
 export function EmergencySOSModal() {
+  const { language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [copied, setCopied] = useState(false);
@@ -22,9 +26,7 @@ export function EmergencySOSModal() {
     }
 
     return () => {
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
+      stopVoiceSpeech();
     };
   }, []);
 
@@ -38,18 +40,23 @@ export function EmergencySOSModal() {
   };
 
   const toggleEmergencyAudio = () => {
-    if (typeof window === 'undefined') return;
     if (audioPlaying) {
-      window.speechSynthesis.cancel();
+      stopVoiceSpeech();
       setAudioPlaying(false);
     } else {
-      const utterance = new SpeechSynthesisUtterance("Emergency Mode Active. If experiencing severe chest pain, breathing difficulty, or heavy bleeding, call 108 immediately.");
-      utterance.lang = "en-IN";
-      utterance.onend = () => setAudioPlaying(false);
-      setAudioPlaying(true);
-      window.speechSynthesis.speak(utterance);
+      const emergencyText = getVoiceEmergencyGuidelines(language);
+      speakTextInLanguage(
+        emergencyText,
+        language,
+        () => setAudioPlaying(true),
+        () => setAudioPlaying(false),
+        () => setAudioPlaying(false)
+      );
     }
   };
+
+  const currentLang = languageNames[language] || languageNames.en;
+  const sarvamConfig = getSarvamVoiceConfig(language);
 
   return (
     <>
@@ -101,7 +108,10 @@ export function EmergencySOSModal() {
                 <button
                   onClick={() => {
                     setIsOpen(false);
-                    if (audioPlaying) window.speechSynthesis.cancel();
+                    if (audioPlaying) {
+                      stopVoiceSpeech();
+                      setAudioPlaying(false);
+                    }
                   }}
                   className="p-2 text-rose-900 hover:bg-rose-100 rounded-xl cursor-pointer"
                 >
@@ -159,15 +169,20 @@ export function EmergencySOSModal() {
                 </div>
               </div>
 
-              {/* Audio Voice Alert Simulation */}
+              {/* Audio Voice Alert Simulation in Active Language */}
               <div className="border-t border-rose-100 pt-4 flex items-center justify-between text-xs">
-                <span className="text-rose-800 font-semibold">Voice Emergency Assistant:</span>
+                <div>
+                  <span className="text-rose-800 font-semibold block">Sarvam AI Emergency Voice:</span>
+                  <span className="text-[10px] text-rose-600 font-bold">
+                    {currentLang.native} · {sarvamConfig.defaultSpeaker}
+                  </span>
+                </div>
                 <button
                   onClick={toggleEmergencyAudio}
-                  className="bg-rose-100 text-rose-900 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer hover:bg-rose-200"
+                  className="bg-rose-100 text-rose-900 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer hover:bg-rose-200 shadow-2xs"
                 >
-                  {audioPlaying ? <VolumeX className="w-4 h-4 text-rose-700" /> : <Volume2 className="w-4 h-4 text-rose-700" />}
-                  <span>{audioPlaying ? "Stop Voice" : "Play Voice Guidelines"}</span>
+                  {audioPlaying ? <VolumeX className="w-4 h-4 text-rose-700 animate-pulse" /> : <Volume2 className="w-4 h-4 text-rose-700" />}
+                  <span>{audioPlaying ? "Stop Voice" : `Play in ${currentLang.native}`}</span>
                 </button>
               </div>
 

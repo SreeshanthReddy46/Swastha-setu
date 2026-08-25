@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { 
   MapPin, 
@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { searchBloodBanks, BloodBank } from '@/lib/blood-bank-service';
 import { HealthFacility } from '@/lib/facility-service';
+import { detectLocationAndLanguageInstantly } from '@/lib/geo-language-detector';
 
 // Dynamically import Leaflet map
 const FacilityMap = dynamic(() => import('../components/FacilityMap.client'), {
@@ -52,6 +53,25 @@ export default function BloodBankPage() {
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
+
+  // Auto-detect user coordinates on mount
+  useEffect(() => {
+    detectLocationAndLanguageInstantly().then((res) => {
+      if (res && res.latitude && res.longitude) {
+        setUserCoords({ lat: res.latitude, lng: res.longitude });
+      }
+    });
+
+    const handleLocationResolved = (e: Event) => {
+      const custom = e as CustomEvent;
+      if (custom.detail && custom.detail.latitude && custom.detail.longitude) {
+        setUserCoords({ lat: custom.detail.latitude, lng: custom.detail.longitude });
+      }
+    };
+
+    window.addEventListener('swastha-location-resolved', handleLocationResolved);
+    return () => window.removeEventListener('swastha-location-resolved', handleLocationResolved);
+  }, []);
 
   const bloodBanks = useMemo(() => {
     const activeLat = userCoords ? userCoords.lat : undefined;

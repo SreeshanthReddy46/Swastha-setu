@@ -42,12 +42,12 @@ function AppHeader() {
           </div>
 
           {/* Right 9 Indian Languages Switcher */}
-          <div className="flex items-center gap-2 bg-white border border-[#E5DCC8] rounded-lg px-2.5 py-1 text-xs">
-            <Globe className="w-4 h-4 text-[#0F6E56]" />
+          <div className="flex items-center gap-2 bg-white border border-[#E5DCC8] rounded-xl px-2.5 py-1.5 text-xs shadow-2xs min-w-[155px]">
+            <Globe className="w-4 h-4 text-[#0F6E56] shrink-0" />
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-transparent font-bold text-[#2C2418] focus:outline-none cursor-pointer"
+              className="bg-transparent font-bold text-[#2C2418] focus:outline-none cursor-pointer w-full text-xs"
             >
               {Object.entries(languageNames).map(([code, info]) => (
                 <option key={code} value={code}>

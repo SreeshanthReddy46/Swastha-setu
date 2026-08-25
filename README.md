@@ -5,62 +5,109 @@
 
 ---
 
-## 🌟 Key Features & Capabilities
+## 🌟 Key Features & Architecture Overview
 
-### 1. 🏥 Live Hybrid Hospital & Facility Locator (`lib/osm-service.ts`, `app/api/facilities/route.ts`)
-- **Live OpenStreetMap (OSM) Overpass Integration**: Dynamically queries nearby hospitals, nursing homes, and clinics for any coordinate and radius without requiring billed API keys.
-- **High-Availability Multi-Mirror Fallback**: Automatically queries prioritized public Overpass mirrors (`lz4.overpass-api.de`, `overpass-api.de`, `maps.mail.ru`, `overpass.kumi.systems`).
-- **Resilient 3.5s Timeout Gate**: Non-blocking `AbortController` timeout ensures external API slowdowns never break the application, falling back seamlessly to seeded government PHC data.
-- **In-Memory 15-Minute Grid Caching**: Coordinates are cached by $\approx 1.1\text{km}$ grid tiles to prevent rate-limiting and deliver sub-millisecond responses on repeated queries.
-- **Spatial Deduplication Engine ($\le 100\text{m}$)**: Automatically detects when an OpenStreetMap node matches an existing seeded government PHC within 100 meters (or 500m with name similarity), preserving the verified government database record with rich bed and doctor metadata.
-- **Ownership Classification & Filtering**:
-  - `🏛️ Government (PHC / CHC / District / AIIMS)`: Tagged from official government datasets and verified public institutions.
-  - `🏥 Private Hospitals & Clinics (OSM)`: Tagged from live OpenStreetMap records.
-  - Interactive UI filters allow filtering by **All Facilities**, **Government Only**, or **Private Only**.
-- **Interactive 3D Leaflet Map (`FacilityMap.client.tsx`)**:
-  - 3D Tilt View vs 2D Flat View toggle.
-  - Color-coded marker badges (Emerald for Government, Indigo for Private).
-  - Live GPS glowing user radius circle (10km radius).
-  - Rich popups with distance, 24/7 emergency status, address, and direct dialing.
-
----
-
-### 2. 🩸 Emergency Blood Bank Locator (`app/(app)/blood-banks/page.tsx`, `lib/blood-bank-service.ts`)
-- **GPS-Powered Nearest Blood Bank Detection**: Calculates exact Haversine distance from the user's location.
-- **Blood Group & Component Stock Matrix**:
-  - Filter by blood group: `O+`, `O- Universal`, `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`.
-  - Filter by specialized blood components: `Platelets (SDP / RDP)` and `FFP (Fresh Frozen Plasma)`.
-- **Live Availability Metrics**: Displays verified units available in stock, storage temperature status, active technicians on duty, and Medical Officer In Charge.
-- **Instant Calling**: Direct one-tap click-to-call for emergency blood dispatch.
+### 1. 🎙️ Sarvam AI Full Neural Multilingual Voice Pipeline (`lib/voice-assistant-engine.ts`, `lib/sarvam-config.ts`, `app/api/voice/`)
+- **Sarvam Bulbul TTS (`bulbul:v3`) & Saaras STT (`saaras:v3`) Integration**:
+  - Full-pipeline neural voice assistant handling both microphone audio transcription and voice speech output through Sarvam AI endpoints.
+  - Dedicated native voice personas across all **9 Indian regional languages**:
+    - **Telugu (`te-IN`)**: `pavithra`
+    - **Hindi (`hi-IN`)**: `meera`
+    - **Tamil (`ta-IN`)**: `iniya`
+    - **Kannada (`kn-IN`)**: `sapna`
+    - **Bengali (`bn-IN`)**: `tanishaa`
+    - **Marathi (`mr-IN`)**: `aarohi`
+    - **Gujarati (`gu-IN`)**: `dhwani`
+    - **Odia (`od-IN`)**: `roopa`
+    - **Indian English (`en-IN`)**: `arvind`
+- **Real-Time Synchronized Subtitle Highlighting**:
+  - Word-by-word active word tracking dynamically synchronized with Sarvam AI audio playback.
+- **Intelligent Context-Aware Symptom Talk-Back**:
+  - Dynamically classifies user symptoms into Emergency (Chest pain, Breathlessness, Trauma, Stroke, Snake bite), Maternity (Pregnancy, Labor), Gastrointestinal (Stomach pain, Vomiting, Diarrhea), and Infection (Fever, Chills, Cough), speaking tailored clinical guidance in the chosen native language.
+- **Dual Voice & Typed Text Input**:
+  - Editable transcription text box allowing users to speak, review, edit, or type symptoms with instant "Ask AI Voice Agent" playback.
 
 ---
 
-### 3. 🔊 Voice-First Multilingual Triage Engine (`lib/voice-assistant-engine.ts`, `lib/triage-engine.ts`)
-- **9 Major Indian Regional Languages Supported**:
-  - English (`en`), Hindi (`hi`), Telugu (`te`), Tamil (`ta`), Kannada (`kn`), Bengali (`bn`), Marathi (`mr`), Gujarati (`gu`), Odia (`or`).
-- **Speech Recognition & Synthesis**: Web Speech API integration with normalized speech pacing (`0.92`), text sanitization (cleans markdown, normalizes numbers like `108` to spoken words, expands units), and fallback text-to-speech.
-- **Spoken Location Detection (`lib/location-service.ts`)**: Automatically extracts spoken district/city names from audio transcriptions when GPS coordinates are unavailable.
-- **Clinical Urgency Assessment**:
-  - `EMERGENCY`: Immediate 108 ambulance dispatch and level-1 trauma / ICU hospital recommendation.
-  - `HIGH`: Same-day hospital / district civil hospital consultation.
-  - `MODERATE`: 24-hour primary health centre consultation.
-  - `ROUTINE`: Home care guidance, hydration, and local PHC OPD visit.
-- **Live Medical Research Intelligence Engine**: Cross-references symptoms against authoritative WHO, ICMR, and MoHFW disease outbreak protocols for emerging vector-borne pathogens, gastroenteritis, and acute febrile illnesses, displaying recommended lab tests (e.g. Dengue NS1, Troponin, CBC Platelet counts) and clinical precautions.
+### 2. 🛡️ Acoustic Echo Isolation & Anti-Feedback Protection (`app/(app)/components/VoiceInput.tsx`)
+- **Automatic Microphone Disconnect During Voice Playback**:
+  - The moment the Sarvam AI voice agent starts speaking, all active microphone recording tracks and `SpeechRecognition` listeners are immediately aborted and muted.
+- **Strict Audio Discard Filter**:
+  - Discards any audio picked up from device speakers while the AI is talking to completely eliminate echo loops.
+- **Room Reverberation Cooldown Buffer**:
+  - Enforces a 600ms buffer after AI speech ends before reopening the microphone, preventing speaker reverberation from being recorded.
+- **One-Tap User Interruption**:
+  - Tapping the microphone button while the agent is speaking immediately stops AI voice playback and opens the mic cleanly for user input.
 
 ---
 
-### 4. 👩‍⚕️ ASHA & Frontline Health Worker Toolkit (`components/AshaToolkit.tsx`)
-- **Oral Rehydration Salts (ORS) Preparation Protocols**: Step-by-step ratio and hygiene instructions for rural dehydration management.
-- **Maternal & Child Health Checklist**: Danger signs during pregnancy, delivery preparedness, and emergency 102 transport.
-- **National Immunization Schedule Reference**: Essential vaccine timelines for infants and mothers.
-- **Offline Triage Cards**: Quick visual reference sheets for community health workers.
+### 3. ⚡ Instant Geolocation & Regional Language Auto-Selection (`lib/geo-language-detector.ts`, `app/api/geo/route.ts`)
+- **Sub-Second Multi-Channel Detection**:
+  - **Instant Cache (<1ms)**: Reads saved location coordinates from session storage.
+  - **Browser Locale (<1ms)**: Inspects `navigator.languages` for native Indian locale hints.
+  - **Fast Server-Side IP Geolocation (`/api/geo`)**: Resolves state/region with a 1200ms timeout guard.
+  - **Parallel GPS Pinpointing**: Runs `navigator.geolocation` for pinpoint coordinates.
+- **Automatic State-to-Language Mapping**:
+  - **Telangana & Andhra Pradesh** $\rightarrow$ `te` (Telugu)
+  - **Maharashtra** $\rightarrow$ `mr` (Marathi)
+  - **Tamil Nadu & Puducherry** $\rightarrow$ `ta` (Tamil)
+  - **Karnataka** $\rightarrow$ `kn` (Kannada)
+  - **West Bengal & Tripura** $\rightarrow$ `bn` (Bengali)
+  - **Gujarat** $\rightarrow$ `gu` (Gujarati)
+  - **Odisha** $\rightarrow$ `or` (Odia)
+  - **Delhi NCR, UP, MP, Bihar, Rajasthan, Haryana, Punjab, Himachal Pradesh, etc.** $\rightarrow$ `hi` (Hindi)
+  - **Other / Global** $\rightarrow$ `en` (English)
+- **Automatic Location Notification Toast**:
+  - Displays `📍 Location: Hyderabad, Telangana — Language set to తెలుగు (Telugu)`.
 
 ---
 
-### 5. 🚨 Emergency 108 SOS Dispatch Modal (`components/EmergencySOSModal.tsx`)
-- Floating emergency trigger on all pages.
-- 1-tap direct dialing for **108 (National Ambulance)**, **102 (Maternity Transport)**, and **104 (Medical Advice Helpline)**.
-- Real-time GPS coordinate readout (`Latitude: 13.2172° N, Longitude: 79.1003° E`) formatted for clear vocal communication to emergency dispatch operators.
+### 4. 🏥 Location-Grounded Hospitals, Facilities & Emergency Blood Banks (`app/(app)/locator/page.tsx`, `app/(app)/blood-banks/page.tsx`)
+- **Automatic Proximity Sorting on Page Load**:
+  - On page load, user coordinates are automatically retrieved and facilities are dynamically fetched and sorted **from closest to furthest**.
+- **Live Hybrid Government PHCs & OpenStreetMap (OSM) Locator**:
+  - Over 500 pre-seeded, verified Indian Government District Civil Hospitals, AIIMS, CHCs, and PHCs merged with live OpenStreetMap clinics.
+  - Spatial deduplication ($\le 100\text{m}$) to merge OSM nodes with verified government doctor and ICU bed counts.
+- **Emergency Blood Banks Matrix (`app/(app)/blood-banks/page.tsx`)**:
+  - Filter by blood group (`O- Universal`, `O+`, `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`) and specialized components (`Platelets SDP/RDP`, `Fresh Frozen Plasma FFP`).
+  - Distance calculation from user location and 1-tap direct calling.
+
+---
+
+### 5. 📋 Native Multilingual Recommended Clinical Action Steps (`lib/triage-engine.ts`, `app/(app)/result/[id]/page.tsx`)
+- **Complete Clinical Translation Across All 9 Languages**:
+  - Urgency level, clinical reasoning, timeframe, recommended hospital type, recommended specialty, and **Recommended Clinical Action Steps** are dynamically generated and displayed in the user's native language:
+    - **Telugu (`te`)**: `"1. వైద్య సహాయం ఆలస్యం చేయవద్దు. వెంటనే 108 కు కాల్ చేయండి. 2. సమీపంలోని 24/7 జిల్లా సివిల్ ఆసుపత్రి అత్యవసర విభాగానికి వెళ్లండి..."`
+    - **Hindi (`hi`)**: `"1. इलाज में बिल्कुल देरी न करें। तुरंत 108 एम्बुलेंस सेवा को कॉल करें। 2. निकटतम प्राथमिक स्वास्थ्य केंद्र (PHC) जाएं..."`
+    - **Tamil (`ta`)**, **Kannada (`kn`)**, **Bengali (`bn`)**, **Marathi (`mr`)**, **Gujarati (`gu`)**, **Odia (`or`)**, **Indian English (`en`)**.
+- **Full Voice Audio Synthesis of Action Steps**:
+  - The Sarvam AI voice agent reads the full clinical guidance—including diagnosis, clinical reasoning, recommended action steps, and nearest hospital name, distance, and phone number in authentic native speech.
+- **Dynamic Real-Time Language Switching**:
+  - Switching the language dropdown on the triage results page instantly re-synthesizes and translates the report in real-time.
+
+---
+
+### 6. 🌐 Zero-Shift Navbar Stability & Universal Indic Font Stack (`app/globals.css`, `app/(marketing)/components/Header.tsx`, `app/(app)/layout.tsx`)
+- **Cross-Platform Universal Indic Typography Stack**:
+  ```css
+  font-family: 'Plus Jakarta Sans', 'Inter', 'Noto Sans', 'Noto Sans Telugu', 
+               'Noto Sans Devanagari', 'Noto Sans Tamil', 'Noto Sans Kannada', 
+               'Noto Sans Bengali', 'Noto Sans Gujarati', 'Noto Sans Oriya', 
+               'Nirmala UI', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  ```
+  - Standardizes line heights, visual weights, and crisp glyph rendering across all 9 scripts.
+- **Zero-Shift Navbar Geometry**:
+  - Pinned fixed-width language selector (`min-w-[155px]`) and fixed flex alignment ensuring no layout jumps or line-wrapping when toggling languages.
+
+---
+
+### 7. 🚀 Low-Latency, Offline-First & High-Responsiveness Architecture
+- **Instant Client-Side Triage Fallback (<10ms)**:
+  - Check-up assessment requests feature a 2.5s network timeout guard. If on 2G or offline, the triage engine executes **locally in browser memory with zero network delay**.
+- **PWA Service Worker Caching (`public/sw.js`, `public/manifest.json`)**:
+  - Offline asset caching for static bundles, stylesheets, fonts, and core triage routes for instant repeat loads in rural low-bandwidth regions.
+- **Lightweight Low-Latency Voice Fallback**:
+  - 2.6s timeout guard on Sarvam TTS API requests, falling back seamlessly to client-side browser speech synthesis if cellular network latency spikes.
 
 ---
 
@@ -82,7 +129,7 @@
 ## 📡 API Endpoints Reference
 
 ### 1. Facilities API (`GET /api/facilities`)
-Returns verified government PHCs/hospitals merged with live OpenStreetMap healthcare facilities.
+Returns verified government PHCs/hospitals merged with live OpenStreetMap healthcare facilities sorted by distance.
 
 **Parameters:**
 - `lat` (float, optional): User latitude.
@@ -92,74 +139,46 @@ Returns verified government PHCs/hospitals merged with live OpenStreetMap health
 - `ownership` (string, optional): `'government'` or `'private'`.
 - `id` (string, optional): Retrieve a single facility by ID.
 
-**Example Response:**
+---
+
+### 2. Geolocation & Language API (`GET /api/geo`)
+Returns client IP geolocation data with Indian regional native language recommendation.
+
+---
+
+### 3. Voice TTS API (`POST /api/voice/tts`)
+Proxies requests to Sarvam AI Bulbul neural TTS (`bulbul:v3`) with 24-hour LRU in-memory caching and fallback.
+
+**Request Body:**
 ```json
 {
-  "facilities": [
-    {
-      "id": "phc-001",
-      "name": "Chittoor Government District Hospital",
-      "type": "District Civil Hospital",
-      "ownership": "government",
-      "source": "seeded_phc",
-      "district": "Chittoor",
-      "state": "Andhra Pradesh",
-      "address": "Collectorate Road, Greamspet, Chittoor, AP 517001",
-      "latitude": 13.2172,
-      "longitude": 79.1003,
-      "phone": "+91 8572 222 450",
-      "emergency_24x7": true,
-      "icu_beds": 24,
-      "doctors_on_duty": 18,
-      "beds_available": 350,
-      "ambulance_available": true,
-      "specialties": ["Level-1 Trauma", "Cardiology", "General Surgery"],
-      "distance_km": 0.8
-    },
-    {
-      "id": "osm-node-10827364",
-      "name": "Apollo Clinic & Diagnostic Centre",
-      "type": "Private Hospital / Clinic",
-      "ownership": "private",
-      "source": "osm",
-      "district": "Chittoor",
-      "state": "Andhra Pradesh",
-      "address": "High Road, Chittoor",
-      "latitude": 13.2210,
-      "longitude": 79.1045,
-      "phone": "108 (National Emergency)",
-      "emergency_24x7": false,
-      "doctors_on_duty": 1,
-      "ambulance_available": false,
-      "specialties": ["General Medicine", "OPD Care"],
-      "distance_km": 1.2
-    }
-  ],
-  "userCoords": { "lat": 13.2172, "lng": 79.1003 },
-  "totalCount": 2
+  "text": "మీరు చెప్పిన ఛాతీ నొప్పి అత్యవసర లక్షణం...",
+  "language": "te",
+  "speaker": "pavithra",
+  "pace": 0.95
 }
 ```
 
-### 2. Blood Banks API (`GET /api/blood-banks`)
-Returns emergency blood bank locations with live component inventory.
+---
 
-**Parameters:**
-- `lat` (float, optional): User latitude.
-- `lng` (float, optional): User longitude.
-- `q` (string, optional): Blood bank name or city.
-- `bloodGroup` (string, optional): e.g. `'O+'`, `'O-'`, `'A+'`, `'B+'`, `'AB+'`.
-- `component` (string, optional): `'platelets'` or `'plasma'`.
+### 4. Voice STT API (`POST /api/voice/stt`)
+Proxies multipart audio recordings to Sarvam AI Saaras STT (`saaras:v3`) for neural speech-to-text transcription.
+
+---
+
+### 5. Triage API (`POST /api/triage`)
+Evaluates symptom vectors, clinical risk level, action steps, and nearest facility grounded recommendations in the selected native language.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Framework**: Next.js 15 / 16 (App Router) + TypeScript
-- **Styling**: Tailwind CSS v4 + Custom "Warm Trust" design tokens
-- **Animations**: Framer Motion (GPU hardware-accelerated viewport transitions and active tabs)
+- **Framework**: Next.js 16 (App Router + Turbopack) + TypeScript + React 19
+- **Styling**: Tailwind CSS v4 + Custom "Warm Trust" design system
+- **Animations**: Framer Motion (GPU hardware-accelerated viewport transitions and active indicators)
 - **Mapping**: Leaflet.js + OpenStreetMap with custom 3D isometric markers
-- **External Data**: OpenStreetMap Overpass QL API (with multi-mirror redundancy)
-- **Voice APIs**: Web Speech API (`SpeechRecognition`, `SpeechSynthesisUtterance`)
+- **Voice AI Pipeline**: Sarvam AI Neural Models (`bulbul:v3` TTS & `saaras:v3` STT) across 9 Indian Languages with fallback to Web Speech API
+- **PWA & Offline**: Progressive Web App Manifest + Service Worker caching
 - **Geospatial Processing**: High-precision Haversine formula distance calculations
 
 ---
@@ -168,8 +187,6 @@ Returns emergency blood bank locations with live component inventory.
 
 ### Option A: 🐳 Run with Docker (Recommended for Any Laptop / OS)
 
-You can run Swastha Setu on any machine (Windows, macOS, Linux) with Docker installed without setting up Node.js or local dependencies:
-
 ```bash
 # 1. Clone the repository
 git clone https://github.com/SreeshanthReddy46/Swastha-setu.git
@@ -177,10 +194,6 @@ cd Swastha-setu
 
 # 2. Build and start with Docker Compose
 docker compose up --build
-
-# Or using plain Docker:
-docker build -t swastha-setu .
-docker run -p 3000:3000 swastha-setu
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -192,23 +205,30 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Node.js 18.x or higher
 - npm, pnpm, or yarn
 
-#### Installation & Startup
+#### 1. Environment Configuration
+Create a `.env.local` file in the root directory (optional for Sarvam neural voice keys):
+```env
+SARVAM_API_KEY=your_sarvam_api_key_here
+```
+*(Note: If `SARVAM_API_KEY` is not provided, the application automatically uses browser-native speech synthesis and speech recognition as a seamless zero-config fallback).*
+
+#### 2. Installation & Startup
 ```bash
-# 1. Install dependencies
+# Install dependencies
 npm install
 
-# 2. Start development server
+# Start development server
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
-#### Building for Production Locally
+#### 3. Building for Production Locally
 ```bash
-# Compile and verify production bundle
-npm run build
-
 # Run TypeScript type verification
 npx tsc --noEmit
+
+# Compile production bundle
+npm run build
 ```
 
 ---

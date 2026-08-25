@@ -7,6 +7,8 @@ import { Mic, Touchpad, Activity, ArrowRight, Trash2, MapPin } from 'lucide-reac
 import { VoiceInput } from '../components/VoiceInput';
 import { BodyMapFallback } from '../components/BodyMapFallback';
 import { useLanguage } from '@/lib/language-context';
+import { detectLocationAndLanguageInstantly } from '@/lib/geo-language-detector';
+import { evaluateSymptoms } from '@/lib/triage-engine';
 
 export default function CheckUpPage() {
   const router = useRouter();
@@ -18,21 +20,21 @@ export default function CheckUpPage() {
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setUserCoords({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude
-          });
-        },
-        () => {
-          // Default fallback location (e.g. Chittoor / Tirupati region)
-          setUserCoords({ lat: 13.2172, lng: 79.1003 });
-        },
-        { enableHighAccuracy: true, timeout: 6000 }
-      );
-    }
+    detectLocationAndLanguageInstantly().then((res) => {
+      if (res && res.latitude && res.longitude) {
+        setUserCoords({ lat: res.latitude, lng: res.longitude });
+      }
+    });
+
+    const handleLocationResolved = (e: Event) => {
+      const custom = e as CustomEvent;
+      if (custom.detail && custom.detail.latitude && custom.detail.longitude) {
+        setUserCoords({ lat: custom.detail.latitude, lng: custom.detail.longitude });
+      }
+    };
+
+    window.addEventListener('swastha-location-resolved', handleLocationResolved);
+    return () => window.removeEventListener('swastha-location-resolved', handleLocationResolved);
   }, []);
 
   const handleToggleChip = useCallback((sym: string) => {
@@ -57,10 +59,14 @@ export default function CheckUpPage() {
     }
 
     setIsSubmitting(true);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2500);
+
     try {
       const res = await fetch('/api/triage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           symptoms: selectedChips,
           transcription: transcriptionText,
@@ -69,14 +75,31 @@ export default function CheckUpPage() {
           language
         })
       });
+      clearTimeout(timeout);
 
-      const data = await res.json();
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem(`triage_${data.id}`, JSON.stringify(data));
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(`triage_${data.id}`, JSON.stringify(data));
+        }
+        router.push(`/result/${data.id}`);
+        return;
       }
-      router.push(`/result/${data.id}`);
+      throw new Error('Server fallback');
     } catch {
-      alert("Error generating triage report. Please try again.");
+      clearTimeout(timeout);
+      // High-speed low-latency client-side triage engine fallback (<10ms)
+      const fallbackResult = evaluateSymptoms(
+        selectedChips,
+        transcriptionText,
+        userCoords?.lat,
+        userCoords?.lng,
+        language
+      );
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(`triage_${fallbackResult.id}`, JSON.stringify(fallbackResult));
+      }
+      router.push(`/result/${fallbackResult.id}`);
     } finally {
       setIsSubmitting(false);
     }

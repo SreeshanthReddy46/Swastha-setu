@@ -1,0 +1,16 @@
+{
+  "name": "Swastha Setu — Voice-First Health Triage & PHC Locator",
+  "short_name": "Swastha Setu",
+  "description": "Free multilingual voice-first health triage and Primary Health Centre locator for rural & urban India.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF6EE",
+  "theme_color": "#0F6E56",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

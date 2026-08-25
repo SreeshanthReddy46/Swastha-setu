@@ -24,9 +24,10 @@ import {
   BedDouble,
   UserCheck
 } from 'lucide-react';
-import { TriageResult } from '@/lib/triage-engine';
-import { useLanguage } from '@/lib/language-context';
+import { TriageResult, generateLocalizedSpeechScript, getLocalizedTriageContent } from '@/lib/triage-engine';
+import { useLanguage, languageNames } from '@/lib/language-context';
 import { speakTextInLanguage, stopVoiceSpeech } from '@/lib/voice-assistant-engine';
+import { getSarvamVoiceConfig } from '@/lib/sarvam-config';
 
 const DEFAULT_DEMO_RESULT: TriageResult = {
   id: 'trg-demo',
@@ -137,15 +138,31 @@ export default function TriageResultPage() {
   );
 
   const result: TriageResult = useMemo(() => {
+    let base: TriageResult = { ...DEFAULT_DEMO_RESULT, id: id || 'trg-demo' };
     if (rawStored) {
       try {
-        return JSON.parse(rawStored);
+        base = JSON.parse(rawStored);
       } catch {
         // Fallback
       }
     }
-    return { ...DEFAULT_DEMO_RESULT, id: id || 'trg-demo' };
-  }, [rawStored, id]);
+    const cat = base.urgency === 'EMERGENCY'
+      ? 'EMERGENCY'
+      : (base.title?.toLowerCase().includes('matern') || base.recommended_specialty?.toLowerCase().includes('obstetric')
+        ? 'MATERNITY'
+        : base.urgency);
+    const localized = getLocalizedTriageContent(base.urgency, cat as any, language);
+    return {
+      ...base,
+      id: id || base.id || 'trg-demo',
+      title: localized.title || base.title,
+      action_steps: localized.action_steps || base.action_steps,
+      timeframe: localized.timeframe || base.timeframe,
+      recommended_facility_type: localized.recommended_facility_type || base.recommended_facility_type,
+      recommended_specialty: localized.recommended_specialty || base.recommended_specialty,
+      red_flags: localized.red_flags || base.red_flags
+    };
+  }, [rawStored, id, language]);
 
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [highlightedWordIndex, setHighlightedWordIndex] = useState<number>(-1);
@@ -159,15 +176,8 @@ export default function TriageResultPage() {
       setIsPlayingAudio(false);
       setHighlightedWordIndex(-1);
     } else {
-      let speechText = result.speech_script;
-      if (!speechText) {
-        let nearestHospSpeech = '';
-        if (result.nearest_facilities && result.nearest_facilities.length > 0) {
-          const topHosp = result.nearest_facilities[0];
-          nearestHospSpeech = ` Your closest recommended facility is ${topHosp.name}, located ${topHosp.distance_km} kilometers away. Contact: ${topHosp.phone}.`;
-        }
-        speechText = `${result.title}. ${result.reasoning}.${nearestHospSpeech} Recommended action window: ${result.timeframe}. Recommended action steps: ${result.action_steps.join('. ')}`;
-      }
+      const topFacility = result.nearest_facilities && result.nearest_facilities.length > 0 ? result.nearest_facilities[0] : null;
+      const speechText = generateLocalizedSpeechScript(result.urgency, topFacility, language) || result.speech_script;
 
       setSpokenTextState(speechText);
       setHighlightedWordIndex(-1);
@@ -219,7 +229,7 @@ export default function TriageResultPage() {
             className="inline-flex items-center gap-2 bg-[#0F6E56]/10 text-[#0F6E56] hover:bg-[#0F6E56]/20 font-bold text-xs px-4 py-2 rounded-xl border border-[#0F6E56]/30 transition-all cursor-pointer shadow-2xs active:scale-95"
           >
             {isPlayingAudio ? <VolumeX className="w-4 h-4 text-[#A32D2D] animate-pulse" /> : <Volume2 className="w-4 h-4 text-[#0F6E56]" />}
-            <span>{isPlayingAudio ? 'Stop Voice Guidance' : 'Listen in Clear Audio (TTS)'}</span>
+            <span>{isPlayingAudio ? 'Stop Voice Guidance' : `Listen Sarvam Voice (${languageNames[language]?.native || 'Native'} · ${getSarvamVoiceConfig(language).defaultSpeaker})`}</span>
           </button>
         </div>
 
@@ -229,7 +239,7 @@ export default function TriageResultPage() {
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#0F6E56] flex items-center gap-1.5">
                 <Volume2 className="w-3.5 h-3.5 text-[#0F6E56] animate-pulse" />
-                Live Synchronized Audio Guidance:
+                Sarvam Voice Guidance ({languageNames[language]?.native || 'Native'} · {getSarvamVoiceConfig(language).defaultSpeaker}):
               </span>
               <button
                 onClick={() => {
@@ -406,7 +416,25 @@ export default function TriageResultPage() {
 
         {/* Action Steps Checklist */}
         <div className="space-y-3">
-          <h3 className="text-sm font-bold text-[#2C2418] uppercase tracking-wider">Recommended Clinical Action Steps:</h3>
+          <h3 className="text-sm font-bold text-[#2C2418] uppercase tracking-wider">
+            {language === 'te'
+              ? 'సిఫార్సు చేయబడిన క్లినికల్ చర్యలు:'
+              : language === 'hi'
+              ? 'सुझाई गई नैदानिक ​​कार्रवाई के कदम:'
+              : language === 'ta'
+              ? 'பரிந்துரைக்கப்பட்ட மருத்துவ நடவடிக்கைகள்:'
+              : language === 'kn'
+              ? 'ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ಲಿನಿಕಲ್ ಕ್ರಮಗಳು:'
+              : language === 'bn'
+              ? 'প্রস্তাবিত ক্লিনিক্যাল পদক্ষেপ:'
+              : language === 'mr'
+              ? 'शिफारस केलेल्या वैद्यकीय कृती पायऱ्या:'
+              : language === 'gu'
+              ? 'ભલામણ કરેલ ક્લિનિકલ પગલાં:'
+              : language === 'or'
+              ? 'ପରାମର୍ଶିତ କ୍ଲିନିକାଲ୍ ପଦକ୍ଷେପ:'
+              : 'Recommended Clinical Action Steps:'}
+          </h3>
           <ul className="space-y-2.5">
             {result.action_steps.map((step, idx) => (
               <li key={idx} className="flex items-start gap-3 bg-[#FAF6EE]/60 p-3 rounded-xl border border-[#E5DCC8]/50 text-xs font-medium text-[#2C2418]">

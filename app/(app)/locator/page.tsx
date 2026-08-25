@@ -20,6 +20,7 @@ import {
   Layers
 } from 'lucide-react';
 import { searchFacilities, HealthFacility } from '@/lib/facility-service';
+import { detectLocationAndLanguageInstantly } from '@/lib/geo-language-detector';
 
 // Dynamically import Leaflet map to avoid SSR window errors
 const FacilityMap = dynamic(() => import('../components/FacilityMap.client'), {
@@ -42,6 +43,25 @@ export default function LocatorPage() {
   // Live API States
   const [liveFacilities, setLiveFacilities] = useState<HealthFacility[] | null>(null);
   const [isFetchingLive, setIsFetchingLive] = useState(false);
+
+  // Auto-detect user coordinates instantly on mount
+  useEffect(() => {
+    detectLocationAndLanguageInstantly().then((res) => {
+      if (res && res.latitude && res.longitude) {
+        setUserCoords({ lat: res.latitude, lng: res.longitude });
+      }
+    });
+
+    const handleLocationResolved = (e: Event) => {
+      const custom = e as CustomEvent;
+      if (custom.detail && custom.detail.latitude && custom.detail.longitude) {
+        setUserCoords({ lat: custom.detail.latitude, lng: custom.detail.longitude });
+      }
+    };
+
+    window.addEventListener('swastha-location-resolved', handleLocationResolved);
+    return () => window.removeEventListener('swastha-location-resolved', handleLocationResolved);
+  }, []);
 
   // Fetch merged results (Govt PHC + Live OSM) when user coordinates are active
   useEffect(() => {

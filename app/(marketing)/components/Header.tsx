@@ -97,12 +97,12 @@ export function Header() {
         className={`mx-auto transition-all duration-200 pointer-events-auto ${
           isScrolled
             ? 'max-w-6xl bg-[#FAF6EE]/96 backdrop-blur-md border border-[#E5DCC8] shadow-md rounded-2xl py-2 px-3 sm:px-4'
-            : 'max-w-7xl bg-[#FAF6EE]/95 border-b border-[#E5DCC8]/70 py-3 px-4 sm:px-5 rounded-b-2xl'
+            : 'max-w-7xl bg-[#FAF6EE]/95 border-b border-[#E5DCC8]/70 py-2.5 px-4 sm:px-5 rounded-b-2xl'
         }`}
       >
-        <div className="flex items-center justify-between flex-nowrap gap-2 sm:gap-4 w-full">
+        <div className="flex items-center justify-between flex-nowrap gap-2 sm:gap-4 w-full h-12">
           
-          {/* Unique Brand Logo */}
+          {/* Unique Brand Logo - Fixed Left Anchor */}
           <a
             href="#hero"
             onClick={(e) => handleNavClick(e, 'hero')}
@@ -120,7 +120,7 @@ export function Header() {
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={(e) => handleNavClick(e, item.id)}
-                  className={`relative text-[11px] xl:text-xs font-bold px-2 xl:px-2.5 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                  className={`relative text-xs font-bold px-2.5 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap flex items-center justify-center ${
                     isActive
                       ? 'text-[#0F6E56]'
                       : 'text-[#6B6355] hover:text-[#2C2418] hover:bg-[#E5DCC8]/40'
@@ -140,40 +140,42 @@ export function Header() {
 
             <Link
               href="/blood-banks"
-              className="text-[11px] xl:text-xs font-extrabold text-[#A32D2D] hover:bg-rose-50 px-2 xl:px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors whitespace-nowrap"
+              className="text-xs font-extrabold text-[#A32D2D] hover:bg-rose-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors whitespace-nowrap"
             >
-              <Droplet className="w-3 h-3 xl:w-3.5 xl:h-3.5 fill-[#A32D2D]" />
+              <Droplet className="w-3.5 h-3.5 fill-[#A32D2D]" />
               <span>Blood Banks</span>
             </Link>
           </nav>
 
-          {/* Right Actions */}
+          {/* Right Actions - Fixed Stable Sizing */}
           <div className="hidden md:flex items-center gap-2 xl:gap-3 shrink-0 flex-nowrap">
-            {/* 9 Indian Languages Selector */}
-            <div className="flex items-center bg-white border border-[#E5DCC8] rounded-xl px-2 xl:px-2.5 py-1.5 shadow-2xs shrink-0">
-              <Globe className="w-3.5 h-3.5 text-[#0F6E56] mr-1 shrink-0" />
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as Language)}
-                className="bg-transparent text-[11px] xl:text-xs font-bold text-[#2C2418] focus:outline-none cursor-pointer"
-                aria-label="Select Language"
-              >
-                {Object.entries(languageNames).map(([code, info]) => (
-                  <option key={code} value={code}>
-                    {info.native} ({info.english})
-                  </option>
-                ))}
-              </select>
+            {/* 9 Indian Languages Selector - Fixed Stable Width */}
+            <div className="flex items-center bg-white border border-[#E5DCC8] rounded-xl px-2.5 py-1.5 shadow-2xs shrink-0 min-w-[155px] justify-between">
+              <div className="flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as Language)}
+                  className="bg-transparent text-xs font-bold text-[#2C2418] focus:outline-none cursor-pointer w-full"
+                  aria-label="Select Language"
+                >
+                  {Object.entries(languageNames).map(([code, info]) => (
+                    <option key={code} value={code}>
+                      {info.native} ({info.english})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Glowing Terracotta CTA */}
             <m.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="shrink-0">
               <Link
                 href="/check-up"
-                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#D85A30] to-[#C24C24] text-white text-[11px] xl:text-xs font-extrabold px-3.5 xl:px-4 py-2 rounded-xl shadow-md hover:shadow-lg transition-all whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#D85A30] to-[#C24C24] text-white text-xs font-extrabold px-4 py-2 rounded-xl shadow-md hover:shadow-lg transition-all whitespace-nowrap"
               >
                 <span>{t('getStarted')}</span>
-                <ArrowRight className="w-3 h-3 xl:w-3.5 xl:h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </m.div>
           </div>
