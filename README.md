@@ -1,247 +1,210 @@
-# Swastha Setu ("स्वास्थ्य सेतु") — Voice-First Rural Health Triage, All-Hospital & Emergency Blood Bank Locator
+# Swastha Setu ("स्वास्थ्य सेतु")
+### Voice-First Multilingual Rural Health Triage, Verified Hospital & Emergency Blood Bank Locator
 
-> **Health guidance in your language, for everyone.**  
-> Swastha Setu is a high-performance, voice-first public health triage platform, Open Government Healthcare & Emergency Blood Bank Locator designed to connect citizens directly to verified government healthcare facilities (AIIMS, District Civil Hospitals, Medical Colleges, Trauma Centers, PHCs/CHCs), live private hospitals via OpenStreetMap, and emergency blood banks across India.
-
----
-
-## 🌟 Key Features & Architecture Overview
-
-### 1. 🎙️ Sarvam AI Full Neural Multilingual Voice Pipeline (`lib/voice-assistant-engine.ts`, `lib/sarvam-config.ts`, `app/api/voice/`)
-- **Sarvam Bulbul TTS (`bulbul:v3`) & Saaras STT (`saaras:v3`) Integration**:
-  - Full-pipeline neural voice assistant handling both microphone audio transcription and voice speech output through Sarvam AI endpoints.
-  - Dedicated native voice personas across all **9 Indian regional languages**:
-    - **Telugu (`te-IN`)**: `pavithra`
-    - **Hindi (`hi-IN`)**: `meera`
-    - **Tamil (`ta-IN`)**: `iniya`
-    - **Kannada (`kn-IN`)**: `sapna`
-    - **Bengali (`bn-IN`)**: `tanishaa`
-    - **Marathi (`mr-IN`)**: `aarohi`
-    - **Gujarati (`gu-IN`)**: `dhwani`
-    - **Odia (`od-IN`)**: `roopa`
-    - **Indian English (`en-IN`)**: `arvind`
-- **Real-Time Synchronized Subtitle Highlighting**:
-  - Word-by-word active word tracking dynamically synchronized with Sarvam AI audio playback.
-- **Intelligent Context-Aware Symptom Talk-Back**:
-  - Dynamically classifies user symptoms into Emergency (Chest pain, Breathlessness, Trauma, Stroke, Snake bite), Maternity (Pregnancy, Labor), Gastrointestinal (Stomach pain, Vomiting, Diarrhea), and Infection (Fever, Chills, Cough), speaking tailored clinical guidance in the chosen native language.
-- **Dual Voice & Typed Text Input**:
-  - Editable transcription text box allowing users to speak, review, edit, or type symptoms with instant "Ask AI Voice Agent" playback.
+> **"Health guidance in your language, for everyone."**  
+> Swastha Setu is a voice-first, multilingual public health navigation and triage platform tailored for India. It empowers citizens—regardless of literacy levels or linguistic backgrounds—to articulate symptoms naturally in their native language, receive instant clinical urgency assessments, and discover verified government hospitals, community health centers, and emergency blood banks in real time.
 
 ---
 
-### 2. 🛡️ Acoustic Echo Isolation & Anti-Feedback Protection (`app/(app)/components/VoiceInput.tsx`)
-- **Automatic Microphone Disconnect During Voice Playback**:
-  - The moment the Sarvam AI voice agent starts speaking, all active microphone recording tracks and `SpeechRecognition` listeners are immediately aborted and muted.
-- **Strict Audio Discard Filter**:
-  - Discards any audio picked up from device speakers while the AI is talking to completely eliminate echo loops.
-- **Room Reverberation Cooldown Buffer**:
-  - Enforces a 600ms buffer after AI speech ends before reopening the microphone, preventing speaker reverberation from being recorded.
-- **One-Tap User Interruption**:
-  - Tapping the microphone button while the agent is speaking immediately stops AI voice playback and opens the mic cleanly for user input.
+## 🧭 Vision & Mission
+
+In rural and semi-urban India, navigating the healthcare system presents severe challenges: language barriers, digital literacy hurdles, unfamiliar medical jargon, and difficulty discovering emergency facilities with appropriate resources (such as ICU beds, maternity care, or specific blood components).
+
+**Swastha Setu ("Health Bridge")** bridges this gap by transforming healthcare discovery into a natural, conversational experience:
+1. **Zero Linguistic Barriers**: Citizens interact naturally through voice in 9 major Indian languages.
+2. **Immediate Health Triage**: Immediate, structured symptom assessment that classifies urgency and provides step-by-step guidance before visiting a clinic.
+3. **Verified Infrastructure Access**: Direct navigation to verified public healthcare institutions (AIIMS, District Civil Hospitals, Community Health Centers, Primary Health Centers), live community health facilities, and emergency blood banks.
+4. **Resilient in Low-Connectivity**: Built with an offline-first, low-bandwidth architecture so that essential guidance is accessible even in remote areas with 2G/3G networks.
 
 ---
 
-### 3. ⚡ Instant Geolocation & Regional Language Auto-Selection (`lib/geo-language-detector.ts`, `app/api/geo/route.ts`)
-- **Sub-Second Multi-Channel Detection**:
-  - **Instant Cache (<1ms)**: Reads saved location coordinates from session storage.
-  - **Browser Locale (<1ms)**: Inspects `navigator.languages` for native Indian locale hints.
-  - **Fast Server-Side IP Geolocation (`/api/geo`)**: Resolves state/region with a 1200ms timeout guard.
-  - **Parallel GPS Pinpointing**: Runs `navigator.geolocation` for pinpoint coordinates.
-- **Automatic State-to-Language Mapping**:
-  - **Telangana & Andhra Pradesh** $\rightarrow$ `te` (Telugu)
-  - **Maharashtra** $\rightarrow$ `mr` (Marathi)
-  - **Tamil Nadu & Puducherry** $\rightarrow$ `ta` (Tamil)
-  - **Karnataka** $\rightarrow$ `kn` (Kannada)
-  - **West Bengal & Tripura** $\rightarrow$ `bn` (Bengali)
-  - **Gujarat** $\rightarrow$ `gu` (Gujarati)
-  - **Odisha** $\rightarrow$ `or` (Odia)
-  - **Delhi NCR, UP, MP, Bihar, Rajasthan, Haryana, Punjab, Himachal Pradesh, etc.** $\rightarrow$ `hi` (Hindi)
-  - **Other / Global** $\rightarrow$ `en` (English)
-- **Automatic Location Notification Toast**:
-  - Displays `📍 Location: Hyderabad, Telangana — Language set to తెలుగు (Telugu)`.
+## 🌟 Comprehensive Feature Overview
+
+### 1. 🎙️ Multilingual Neural Voice Assistant
+- **Voice-In, Voice-Out Interaction**: Users can simply tap and describe their health concerns naturally. The system transcribes spoken regional dialects and responds with natural-sounding native voice guidance.
+- **9 Indian Regional Languages**: Comprehensive support across major linguistic zones:
+  - **Telugu** (`తెలుగు`)
+  - **Hindi** (`हिन्दी`)
+  - **Tamil** (`தமிழ்`)
+  - **Kannada** (`ಕನ್ನಡ`)
+  - **Bengali** (`বাংলা`)
+  - **Marathi** (`मराठी`)
+  - **Gujarati** (`ગુજરાતી`)
+  - **Odia** (`ଓଡ଼ିଆ`)
+  - **Indian English**
+- **Dynamic Symptom Talk-Back**: Listens to symptoms, intelligently parses clinical concerns, and converses with tailored, empathetic guidance in the selected language.
+- **Synchronized Subtitle Highlighting**: Real-time visual tracking highlights words synchronously as the voice agent speaks, aiding users with varying literacy levels.
+- **Dual Voice & Text Flexibility**: Full support for speaking, reviewing, editing, or typing symptoms at any stage.
 
 ---
 
-### 4. 🏥 Location-Grounded Hospitals, Facilities & Emergency Blood Banks (`app/(app)/locator/page.tsx`, `app/(app)/blood-banks/page.tsx`)
-- **Automatic Proximity Sorting on Page Load**:
-  - On page load, user coordinates are automatically retrieved and facilities are dynamically fetched and sorted **from closest to furthest**.
-- **Live Hybrid Government PHCs & OpenStreetMap (OSM) Locator**:
-  - Over 500 pre-seeded, verified Indian Government District Civil Hospitals, AIIMS, CHCs, and PHCs merged with live OpenStreetMap clinics.
-  - Spatial deduplication ($\le 100\text{m}$) to merge OSM nodes with verified government doctor and ICU bed counts.
-- **Emergency Blood Banks Matrix (`app/(app)/blood-banks/page.tsx`)**:
-  - Filter by blood group (`O- Universal`, `O+`, `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`) and specialized components (`Platelets SDP/RDP`, `Fresh Frozen Plasma FFP`).
-  - Distance calculation from user location and 1-tap direct calling.
+### 2. 🛡️ Acoustic Echo Isolation & Audio Protection
+- **Intelligent Microphone Control**: Prevents feedback loops by automatically muting and pausing audio capture the moment the voice assistant begins speaking.
+- **Acoustic Reverberation Buffer**: Incorporates a cooldown period after speech playback to prevent ambient room echo or speaker sound from triggering false inputs.
+- **One-Tap Interruption**: Users can interrupt the assistant at any point with a single tap, instantly stopping audio playback and reopening the microphone for seamless two-way dialogue.
 
 ---
 
-### 5. 📋 Native Multilingual Recommended Clinical Action Steps (`lib/triage-engine.ts`, `app/(app)/result/[id]/page.tsx`)
-- **Complete Clinical Translation Across All 9 Languages**:
-  - Urgency level, clinical reasoning, timeframe, recommended hospital type, recommended specialty, and **Recommended Clinical Action Steps** are dynamically generated and displayed in the user's native language:
-    - **Telugu (`te`)**: `"1. వైద్య సహాయం ఆలస్యం చేయవద్దు. వెంటనే 108 కు కాల్ చేయండి. 2. సమీపంలోని 24/7 జిల్లా సివిల్ ఆసుపత్రి అత్యవసర విభాగానికి వెళ్లండి..."`
-    - **Hindi (`hi`)**: `"1. इलाज में बिल्कुल देरी न करें। तुरंत 108 एम्बुलेंस सेवा को कॉल करें। 2. निकटतम प्राथमिक स्वास्थ्य केंद्र (PHC) जाएं..."`
-    - **Tamil (`ta`)**, **Kannada (`kn`)**, **Bengali (`bn`)**, **Marathi (`mr`)**, **Gujarati (`gu`)**, **Odia (`or`)**, **Indian English (`en`)**.
-- **Full Voice Audio Synthesis of Action Steps**:
-  - The Sarvam AI voice agent reads the full clinical guidance—including diagnosis, clinical reasoning, recommended action steps, and nearest hospital name, distance, and phone number in authentic native speech.
-- **Dynamic Real-Time Language Switching**:
-  - Switching the language dropdown on the triage results page instantly re-synthesizes and translates the report in real-time.
+### 3. ⚡ Instant Geolocation & Intelligent Language Detection
+- **Multi-Channel Region Resolution**: Resolves user location rapidly through a combination of browser locale analysis, server-side geographic lookup, and high-precision GPS pinpointing.
+- **Automatic State-to-Language Mapping**: Intelligently pre-selects the primary regional language based on the user's location upon arrival (e.g., Telangana/Andhra Pradesh to Telugu, Maharashtra to Marathi, Tamil Nadu to Tamil, etc.).
+- **Fluid Language Switching**: Users can manually switch their language at any time from the persistent navigation bar without losing their assessment progress.
 
 ---
 
-### 6. 🌐 Zero-Shift Navbar Stability & Universal Indic Font Stack (`app/globals.css`, `app/(marketing)/components/Header.tsx`, `app/(app)/layout.tsx`)
-- **Cross-Platform Universal Indic Typography Stack**:
-  ```css
-  font-family: 'Plus Jakarta Sans', 'Inter', 'Noto Sans', 'Noto Sans Telugu', 
-               'Noto Sans Devanagari', 'Noto Sans Tamil', 'Noto Sans Kannada', 
-               'Noto Sans Bengali', 'Noto Sans Gujarati', 'Noto Sans Oriya', 
-               'Nirmala UI', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  ```
-  - Standardizes line heights, visual weights, and crisp glyph rendering across all 9 scripts.
-- **Zero-Shift Navbar Geometry**:
-  - Pinned fixed-width language selector (`min-w-[155px]`) and fixed flex alignment ensuring no layout jumps or line-wrapping when toggling languages.
+### 4. 🏥 Grounded Healthcare Facilities & Hospital Locator
+- **Verified Public & Private Healthcare Network**: Connects users to hundreds of verified government institutions—including AIIMS, State Medical Colleges, District Civil Hospitals, Community Health Centers (CHCs), and Primary Health Centers (PHCs)—alongside live community-mapped private clinics.
+- **Automatic Proximity Sorting**: Automatically calculates distance using high-precision geospatial coordinates and presents facilities ordered from closest to furthest.
+- **Resource & Facility Filtering**:
+  - Filter by facility ownership (Government Public Hospitals vs. Private Facilities).
+  - Filter by 24/7 Emergency & Intensive Care Units (ICU).
+  - Search by facility name, district, or medical specialty.
+- **One-Touch Emergency Action**: Direct access to hospital emergency phone lines and integrated map navigation.
 
 ---
 
-### 7. 🚀 Low-Latency, Offline-First & High-Responsiveness Architecture
-- **Instant Client-Side Triage Fallback (<10ms)**:
-  - Check-up assessment requests feature a 2.5s network timeout guard. If on 2G or offline, the triage engine executes **locally in browser memory with zero network delay**.
-- **PWA Service Worker Caching (`public/sw.js`, `public/manifest.json`)**:
-  - Offline asset caching for static bundles, stylesheets, fonts, and core triage routes for instant repeat loads in rural low-bandwidth regions.
-- **Lightweight Low-Latency Voice Fallback**:
-  - 2.6s timeout guard on Sarvam TTS API requests, falling back seamlessly to client-side browser speech synthesis if cellular network latency spikes.
+### 5. 🩸 Emergency Blood Bank Matrix
+- **Blood Group & Component Availability**: Dedicated portal to search and locate blood banks with specific blood groups (including universal donors $O^-$ and rare types) as well as specialized blood components such as Platelets (SDP/RDP) and Fresh Frozen Plasma (FFP).
+- **Proximity-Grounded Matrix**: Computes distance relative to the user's current location with instant 1-tap calling for emergency reserves.
 
 ---
 
-## 🎨 Design System — "Warm Trust"
+### 6. 📋 Intelligent Multilingual Clinical Health Triage
+- **Clinical Urgency Assessment**: Categorizes health conditions into clear urgency tiers:
+  - **Emergency / Critical**: Immediate life-saving intervention needed (e.g., severe chest pain, acute respiratory distress, severe trauma, stroke symptoms, venomous bites).
+  - **High Urgency**: Prompt medical attention required within hours.
+  - **Moderate Urgency**: Requires evaluation by a general physician or specialist within 24–48 hours.
+  - **Low Urgency / Routine**: Self-care guidance, preventive measures, or routine PHC consultation.
+- **Comprehensive Multilingual Guidance**: Generates localized, culturally contextualized clinical reasoning, recommended timeframe, appropriate hospital tier (PHC vs. District Hospital vs. Tertiary Trauma Center), and numbered step-by-step action plans.
+- **Full Voice Narration of Medical Reports**: The voice assistant reads out the entire triage assessment—including the primary finding, recommended steps, nearest facility details, and contact numbers—in the user's native language.
 
-| Role | Color Name | Hex Code | Purpose |
+---
+
+### 7. 🚀 Low-Latency & Offline-First Resilience
+- **Instant Client-Side Assessment Fallback**: If network connectivity drops or experiences high latency, the triage assessment continues uninterrupted locally in the browser.
+- **Progressive Web App (PWA) Offline Caching**: Core resources, navigation structures, and triage logic are cached locally, allowing the application to launch and function in remote rural areas with poor connectivity.
+- **Dual Voice Architecture**: Features seamless fallback to native on-device speech synthesis and recognition if cloud speech services become unreachable.
+
+---
+
+## 🎨 Inclusive Design System — "Warm Trust"
+
+Swastha Setu is designed with the **"Warm Trust"** visual philosophy—prioritizing visual comfort, emotional calm, and clarity during medical distress:
+
+- **Deep Forest Teal**: Symbolizes government-grade trust, clinical safety, and verified public infrastructure.
+- **Warm Terracotta**: Highlights primary calls to action, urgent navigation paths, and distance metrics.
+- **Urgent Crimson**: Reserved strictly for high-urgency emergency warnings and national 108 emergency bar alerts.
+- **Warm Cream & Pure White**: Soft, accessible card surfaces that minimize eye strain in varied lighting conditions.
+- **Universal Indic Typography Stack**: High-legibility font rendering across all 9 Indic scripts, ensuring consistent baseline alignment, readable font weights, and layout stability across desktop and mobile screens.
+
+---
+
+## 🗺️ Supported Indian Regional Languages
+
+| Language | Script | Native Name | Primary Coverage Regions |
 |---|---|---|---|
-| Primary | Deep Teal | `#0F6E56` | Headers, active navigation highlights, verified government badges |
-| Warm Accent | Terracotta | `#D85A30` | Primary CTA buttons, emergency highlights, distance pills |
-| Alert | Urgent Red | `#A32D2D` | High/Emergency triage warnings & 108 emergency bar |
-| Background | Warm Cream | `#FAF6EE` | Soft, accessible warm background |
-| Surface | Pure White | `#FFFFFF` | Cards, modals, and interactive map containers |
-| Secondary Tag | Indigo Slate | `#4338CA` | Live OpenStreetMap private hospital badges |
-| Text Primary | Charcoal | `#2C2418` | High-contrast readable typography |
-| Text Secondary | Warm Gray | `#6B6355` | Subtitles, labels, and secondary details |
+| **Telugu** | తెలుగు | తెలుగు | Telangana, Andhra Pradesh |
+| **Hindi** | Devanagari | हिन्दी | Delhi NCR, Uttar Pradesh, Bihar, MP, Rajasthan, Haryana, etc. |
+| **Tamil** | தமிழ் | தமிழ் | Tamil Nadu, Puducherry |
+| **Kannada** | ಕನ್ನಡ | ಕನ್ನಡ | Karnataka |
+| **Bengali** | বাংলা | বাংলা | West Bengal, Tripura |
+| **Marathi** | Devanagari | मराठी | Maharashtra, Goa |
+| **Gujarati** | ગુજરાતી | ગુજરાતી | Gujarat |
+| **Odia** | ଓଡ଼ିଆ | ଓଡ଼ିଆ | Odisha |
+| **Indian English** | Latin | English | Pan-India & Global |
 
 ---
 
-## 📡 API Endpoints Reference
+## 🔄 User Journey: How It Works
 
-### 1. Facilities API (`GET /api/facilities`)
-Returns verified government PHCs/hospitals merged with live OpenStreetMap healthcare facilities sorted by distance.
-
-**Parameters:**
-- `lat` (float, optional): User latitude.
-- `lng` (float, optional): User longitude.
-- `q` (string, optional): Search keyword (hospital name, district, specialty).
-- `emergency` (boolean, optional): Filter for 24/7 emergency & ICU facilities only.
-- `ownership` (string, optional): `'government'` or `'private'`.
-- `id` (string, optional): Retrieve a single facility by ID.
-
----
-
-### 2. Geolocation & Language API (`GET /api/geo`)
-Returns client IP geolocation data with Indian regional native language recommendation.
-
----
-
-### 3. Voice TTS API (`POST /api/voice/tts`)
-Proxies requests to Sarvam AI Bulbul neural TTS (`bulbul:v3`) with 24-hour LRU in-memory caching and fallback.
-
-**Request Body:**
-```json
-{
-  "text": "మీరు చెప్పిన ఛాతీ నొప్పి అత్యవసర లక్షణం...",
-  "language": "te",
-  "speaker": "pavithra",
-  "pace": 0.95
-}
+```
+1. Open Swastha Setu
+   │
+   ▼
+2. Automatic Location & Language Detection (User's Native Language Auto-Selected)
+   │
+   ▼
+3. Express Health Concern (Speak naturally into microphone or type)
+   │
+   ▼
+4. Real-Time Neural Triage Processing (Urgency Evaluation & Risk Classification)
+   │
+   ▼
+5. Multilingual Guidance & Voice Narration (Action Steps read aloud in regional dialect)
+   │
+   ▼
+6. Discover Nearest Healthcare Facility & Blood Banks (1-Tap Call & Map Navigation)
 ```
 
 ---
 
-### 4. Voice STT API (`POST /api/voice/stt`)
-Proxies multipart audio recordings to Sarvam AI Saaras STT (`saaras:v3`) for neural speech-to-text transcription.
+## 💻 Conceptual Architecture
+
+- **Frontend Interface**: High-performance, responsive Single-Page Application optimized for mobile-first rural usage.
+- **Speech Processing Layer**: Neural Text-to-Speech (TTS) and Speech-to-Text (STT) models fine-tuned on Indic regional accents and vocabularies.
+- **Clinical Triage Engine**: Rule-based and semantic symptom evaluation engine adhering to standard emergency health triage guidelines.
+- **Geospatial & Facility Service**: Spatial indexing and deduplication engine that integrates public government hospital databases and real-time open geospatial mappings.
+- **Resilience Layer**: Service worker cache management and client-side computational fallbacks for offline-ready operation.
 
 ---
 
-### 5. Triage API (`POST /api/triage`)
-Evaluates symptom vectors, clinical risk level, action steps, and nearest facility grounded recommendations in the selected native language.
+## 🚀 Getting Started
 
----
+### Method 1: Containerized Deployment (Recommended)
 
-## 🛠️ Technology Stack
-
-- **Framework**: Next.js 16 (App Router + Turbopack) + TypeScript + React 19
-- **Styling**: Tailwind CSS v4 + Custom "Warm Trust" design system
-- **Animations**: Framer Motion (GPU hardware-accelerated viewport transitions and active indicators)
-- **Mapping**: Leaflet.js + OpenStreetMap with custom 3D isometric markers
-- **Voice AI Pipeline**: Sarvam AI Neural Models (`bulbul:v3` TTS & `saaras:v3` STT) across 9 Indian Languages with fallback to Web Speech API
-- **PWA & Offline**: Progressive Web App Manifest + Service Worker caching
-- **Geospatial Processing**: High-precision Haversine formula distance calculations
-
----
-
-## 🚀 Getting Started & Local Setup
-
-### Option A: 🐳 Run with Docker (Recommended for Any Laptop / OS)
+Run the entire application stack in an isolated containerized environment:
 
 ```bash
-# 1. Clone the repository
+# Clone the repository
 git clone https://github.com/SreeshanthReddy46/Swastha-setu.git
 cd Swastha-setu
 
-# 2. Build and start with Docker Compose
+# Start with Docker Compose
 docker compose up --build
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Access the application at `http://localhost:3000`.
 
 ---
 
-### Option B: Local Node.js Setup
+### Method 2: Local Development Setup
 
 #### Prerequisites
-- Node.js 18.x or higher
-- npm, pnpm, or yarn
+- Node.js (v18.x or higher)
+- npm, yarn, or pnpm package manager
 
-#### 1. Environment Configuration
-Create a `.env.local` file in the root directory (optional for Sarvam neural voice keys):
-```env
-SARVAM_API_KEY=your_sarvam_api_key_here
-```
-*(Note: If `SARVAM_API_KEY` is not provided, the application automatically uses browser-native speech synthesis and speech recognition as a seamless zero-config fallback).*
-
-#### 2. Installation & Startup
+#### Setup & Execution
 ```bash
 # Install dependencies
 npm install
 
-# Start development server
+# Launch the development server
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
+Open `http://localhost:3000` in your web browser.
 
-#### 3. Building for Production Locally
+#### Optional Speech Configuration
+To use neural cloud speech models, you can configure your API credentials in your local environment file (`.env.local`). If credentials are not provided, the platform automatically utilizes browser-native speech synthesis and speech recognition as a seamless fallback.
+
+#### Building for Production
 ```bash
-# Run TypeScript type verification
-npx tsc --noEmit
-
-# Compile production bundle
+# Build the production application
 npm run build
+
+# Start the production server
+npm run start
 ```
 
 ---
 
-## 🔒 Scope Boundaries & Disclaimer
+## ⚠️ Public Health Safety & Scope Boundaries
 
-Swastha Setu is designed as a public health assistance and triage navigation platform:
-- **NOT a Diagnostic Tool**: It assesses symptom urgency to guide timely facility visits. It does not replace medical diagnostics.
-- **NOT a Doctor Replacement**: It directs patients to qualified medical professionals at certified facilities.
-- **For Medical Emergencies**: Always dial **108** immediately in life-threatening situations.
+Swastha Setu is designed solely as a public health navigation, symptom triage, and facility discovery tool:
+- **Not a Medical Diagnostic Device**: It assesses symptom urgency to guide timely facility visits. It does not replace definitive medical diagnostics, lab testing, or clinical consultations.
+- **Not a Doctor Replacement**: Its primary purpose is to direct patients to certified healthcare professionals and verified hospitals.
+- **Emergency Situations**: In life-threatening emergencies, citizens should immediately dial **108** (Emergency Ambulance) or **112** (National Emergency Number).
 
 ---
 
 ## 📄 License
 
-Open-source under the [MIT License](LICENSE).
+This project is open-source and distributed under the [MIT License](LICENSE).
